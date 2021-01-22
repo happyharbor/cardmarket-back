@@ -4,4 +4,3 @@ include 'cardmarket-core'
 include 'cardmarket-client'
 include 'cardmarket-rest'
 include 'cardmarket-platform'
-

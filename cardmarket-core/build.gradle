@@ -1,6 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.2'
-    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'org.springframework.boot' version "${springBootVersion}"
     id 'java'
 }
 
@@ -12,17 +11,25 @@ configurations {
     }
 }
 
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
 dependencies {
-    implementation project(':cardmarket-api')
-    runtimeOnly project(':cardmarket-client')
+    implementation platform(project(':cardmarket-platform'))
+    annotationProcessor platform(project(':cardmarket-platform'))
+
+    implementation project(':cardmarket-api'),
+            project(':cardmarket-client')
 
     implementation 'org.springframework.boot:spring-boot-starter'
-//            'org.slf4j:slf4j-api:2.0.0-alpha1',
-//            'org.slf4j:slf4j-simple:2.0.0-alpha1'
-//            'org.apache.logging.log4j:log4j-api',
-//            'org.apache.logging.log4j:log4j-core'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
