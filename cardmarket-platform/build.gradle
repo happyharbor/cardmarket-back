@@ -1,0 +1,16 @@
+plugins {
+    id 'java-platform'
+}
+
+javaPlatform {
+    allowDependencies()
+}
+
+dependencies {
+    // platforms
+    api platform('org.apache.logging.log4j:log4j-bom:2.14.0')
+
+    constraints {
+        api 'org.projectlombok:lombok:1.18.16'
+    }
+}

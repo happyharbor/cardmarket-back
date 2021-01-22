@@ -1,0 +1,6 @@
+logging:
+  file:
+    name: logs/cardmarket.log
+  level:
+    root: info
+    io.happyharbor: debug

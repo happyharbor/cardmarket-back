@@ -1,0 +1,15 @@
+plugins {
+}
+
+group = 'io.happyharbor'
+version = '0.0.1-SNAPSHOT'
+
+subprojects {
+
+    repositories {
+        mavenCentral()
+    }
+
+    group = 'io.happyharbor'
+    version = '0.0.1-SNAPSHOT'
+}
