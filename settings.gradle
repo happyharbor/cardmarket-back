@@ -1,6 +1,6 @@
 rootProject.name = 'cardmarket'
+include 'cardmarket-platform'
 include 'cardmarket-api'
 include 'cardmarket-core'
 include 'cardmarket-client'
 include 'cardmarket-rest'
-include 'cardmarket-platform'
