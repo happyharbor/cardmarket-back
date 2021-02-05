@@ -1,8 +1,8 @@
 package io.happyharbor.cardmarket.api.helper;
 
-import io.happyharbor.cardmarket.api.dto.Language;
-import io.happyharbor.cardmarket.api.dto.MyArticle;
-import io.happyharbor.cardmarket.api.dto.OtherUserArticle;
+import io.happyharbor.cardmarket.api.dto.stock.Language;
+import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
+import io.happyharbor.cardmarket.api.dto.stock.OtherUserArticle;
 import lombok.*;
 
 @Value

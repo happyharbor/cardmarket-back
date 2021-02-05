@@ -1,7 +1,7 @@
 package io.happyharbor.cardmarket.core.csv;
 
 import com.opencsv.bean.CsvBindByName;
-import io.happyharbor.cardmarket.api.dto.Language;
+import io.happyharbor.cardmarket.api.dto.stock.Language;
 import io.happyharbor.cardmarket.api.helper.GroupedArticle;
 import lombok.*;
 

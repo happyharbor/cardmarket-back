@@ -2,9 +2,11 @@ package io.happyharbor.cardmarket.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.happyharbor.cardmarket.api.dto.Account;
-import io.happyharbor.cardmarket.api.dto.MyArticle;
-import io.happyharbor.cardmarket.api.dto.NotUpdatedArticle;
-import io.happyharbor.cardmarket.api.dto.OtherUserArticle;
+import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
+import io.happyharbor.cardmarket.api.dto.order.Order;
+import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
+import io.happyharbor.cardmarket.api.dto.stock.NotUpdatedArticle;
+import io.happyharbor.cardmarket.api.dto.stock.OtherUserArticle;
 import io.happyharbor.cardmarket.api.helper.GroupedArticle;
 import io.happyharbor.cardmarket.api.service.ClientService;
 import io.happyharbor.cardmarket.client.dto.*;
@@ -84,6 +86,13 @@ public class ClientServiceImpl implements ClientService {
                     notUpdatedArticles.forEach(a -> log.warn("Article: {} was not updated, because: {}", a.getArticle(), a.getError()));
                     return notUpdatedArticles;
         });
+    }
+
+    @Override
+    public CompletableFuture<List<Order>> getOrdersBy(final FilteredOrdersRequest request) {
+        return client.sendGetRequest(String.format("orders/%s/%s", request.getActor().getName(), request.getState().getName()),
+                new TypeReference<GetFilterOrdersResponse>() {})
+                .thenApply(GetFilterOrdersResponse::getOrders);
     }
 
     private CompletableFuture<List<List<OtherUserArticle>>> createTasksOtherUsers(

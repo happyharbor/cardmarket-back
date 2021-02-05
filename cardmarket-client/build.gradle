@@ -27,6 +27,7 @@ dependencies {
     implementation project(':cardmarket-api'),
             'com.fasterxml.jackson.core:jackson-core',
             'com.fasterxml.jackson.core:jackson-databind',
+            'com.fasterxml.jackson.datatype:jackson-datatype-jsr310',
             'org.apache.commons:commons-lang3',
             'net.jodah:failsafe',
             'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
