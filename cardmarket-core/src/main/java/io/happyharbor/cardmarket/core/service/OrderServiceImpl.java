@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.OutputStream;
+import java.util.Comparator;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -29,16 +30,18 @@ public class OrderServiceImpl implements OrderService {
                                                               .actor(ActorType.SELLER)
                                                               .state(OrderState.PAID)
                                                               .build())
-                .thenApply(orders -> orders.stream().map(o -> CsvOrder.builder()
-                                                                      .orderId(o.getOrderId())
-                                                                      .name(o.getShippingAddress().getName())
-                                                                      .extra(o.getShippingAddress().getExtra())
-                                                                      .street(o.getShippingAddress().getStreet())
-                                                                      .postCode(o.getShippingAddress().getPostCode())
-                                                                      .city(o.getShippingAddress().getCity())
-                                                                      .country(o.getShippingAddress().getCountry().getName())
-                                                                      .build())
-                        .collect(Collectors.toList()))
+                .thenApply(orders -> orders.stream()
+                                           .sorted(Comparator.comparing(o -> o.getState().getDateBought()))
+                                           .map(o -> CsvOrder.builder()
+                                                             .orderId(o.getOrderId())
+                                                             .name(o.getShippingAddress().getName())
+                                                             .extra(o.getShippingAddress().getExtra())
+                                                             .street(o.getShippingAddress().getStreet())
+                                                             .postCode(o.getShippingAddress().getPostCode())
+                                                             .city(o.getShippingAddress().getCity())
+                                                             .country(o.getShippingAddress().getCountry().getName())
+                                                             .build())
+                                           .collect(Collectors.toList()))
                 .thenApply(csvHelper::writeCsv);
 
     }

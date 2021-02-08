@@ -32,4 +32,6 @@ public class Order {
     @JsonProperty("idCurrency")
     Integer currencyId;
     String currencyCode;
+    CancellationRequest cancellationRequest;
+    CancellationRequests cancellationRequests;
 }
