@@ -12,7 +12,7 @@ import java.io.OutputStream;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/stock")
+@RequestMapping("/order")
 @Log4j2
 public class OrderController {
 
