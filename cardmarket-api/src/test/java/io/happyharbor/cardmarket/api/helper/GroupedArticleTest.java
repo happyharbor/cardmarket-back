@@ -1,9 +1,8 @@
-package io.happyharbor.cardmarket.client;
+package io.happyharbor.cardmarket.api.helper;
 
 import io.happyharbor.cardmarket.api.dto.stock.Language;
 import io.happyharbor.cardmarket.api.dto.stock.OtherUserArticle;
 import io.happyharbor.cardmarket.api.dto.stock.Price;
-import io.happyharbor.cardmarket.api.helper.GroupedArticle;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ClientServiceImplTest {
+class GroupedArticleTest {
 
     @Test
     void test() {
@@ -119,5 +118,4 @@ class ClientServiceImplTest {
 
         assertEquals(Map.of(new GroupedArticle(firstOtherUserArticle), BigDecimal.ONE, new GroupedArticle(secondOtherUserArticle), BigDecimal.TEN), output);
     }
-
 }
