@@ -26,12 +26,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public CompletableFuture<OutputStream> getShippingAddresses() {
+        log.info("Get Shipping Addresses");
         return clientService.getOrdersBy(FilteredOrdersRequest.builder()
                                                               .actor(ActorType.SELLER)
                                                               .state(OrderState.PAID)
                                                               .build())
                 .thenApply(orders -> orders.stream()
-                                           .sorted(Comparator.comparing(o -> o.getState().getDateBought()))
+                                           .sorted(Comparator.comparing(o -> o.getState().getDatePaid()))
                                            .map(o -> CsvOrder.builder()
                                                              .orderId(o.getOrderId())
                                                              .name(o.getShippingAddress().getName())
@@ -43,6 +44,5 @@ public class OrderServiceImpl implements OrderService {
                                                              .build())
                                            .collect(Collectors.toList()))
                 .thenApply(csvHelper::writeCsv);
-
     }
 }
