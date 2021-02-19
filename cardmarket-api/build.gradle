@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation platform(project(':cardmarket-platform'))
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
     annotationProcessor platform(project(':cardmarket-platform'))
 
     implementation 'com.fasterxml.jackson.core:jackson-annotations'

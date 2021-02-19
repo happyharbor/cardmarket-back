@@ -8,19 +8,19 @@ import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
 import io.happyharbor.cardmarket.api.dto.stock.NotUpdatedArticle;
 import io.happyharbor.cardmarket.api.dto.stock.OtherUserArticle;
 import io.happyharbor.cardmarket.api.helper.GroupedArticle;
+import io.happyharbor.cardmarket.api.lib.FutureCollectors;
 import io.happyharbor.cardmarket.api.service.ClientService;
 import io.happyharbor.cardmarket.client.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,7 +29,6 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class ClientServiceImpl implements ClientService {
     private final CardmarketClient client;
-    private final JavaCompletableFuturesSequencer sequencer;
 
     @Override
     public CompletableFuture<Account> getAccountInfo() {
@@ -40,7 +39,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public CompletableFuture<Map<GroupedArticle, BigDecimal>> getUserArticles(final String userId) {
 
-        return createTasksOtherUsers(0, 10, 1000, new LinkedList<>(), userId)
+        return getUserArticlesRecursive(0, 10, 1000, userId)
                 .thenApply(f -> f.stream().flatMap(List::stream).collect(toList()))
                 .thenApply(f -> f.stream()
                                  .filter(a -> "NM".equals(a.getCondition()) || "MT".equals(a.getCondition()))
@@ -53,7 +52,7 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public CompletableFuture<List<MyArticle>> getStock() {
 
-        return createTasks(1, 10, 100, new LinkedList<>()).getRight()
+        return getStockRecursive(1, 10, 100)
                 .thenApply(f -> f.stream().flatMap(List::stream).collect(toList()));
     }
 
@@ -72,16 +71,14 @@ public class ClientServiceImpl implements ClientService {
             listArticles.add(articles.subList(start, end));
             start += max;
         }
-        List<CompletableFuture<List<NotUpdatedArticle>>> stock = listArticles.stream()
+        return listArticles.stream()
                 .parallel()
                 .map(as -> client.sendPutRequest("stock",
                         new TypeReference<UpdateArticleResponse>() {},
                         new UpdateArticlesRequestOuter(as.stream().map(UpdateArticlesRequest::of).collect(toList()))))
                 .map(f -> f.thenApply(UpdateArticleResponse::getNotUpdatedArticles))
-                .collect(toList());
-
-        return sequencer.sequence(stock)
-                .thenApply(f -> f.stream().flatMap(List::stream).collect(toList()))
+                .collect(FutureCollectors.sequenceStreamCollector())
+                .thenApply(f -> f.flatMap(List::stream).collect(toList()))
                 .thenApply(notUpdatedArticles -> {
                     notUpdatedArticles.forEach(a -> log.warn("Article: {} was not updated, because: {}", a.getArticle(), a.getError()));
                     return notUpdatedArticles;
@@ -95,62 +92,52 @@ public class ClientServiceImpl implements ClientService {
                 .thenApply(GetFilterOrdersResponse::getOrders);
     }
 
-    private CompletableFuture<List<List<OtherUserArticle>>> createTasksOtherUsers(
-            final int s, final int maxTasks, int maxResults, List<List<OtherUserArticle>> articles, final String userId) {
 
-        final List<CompletableFuture<List<OtherUserArticle>>> futures = new ArrayList<>();
-        int start = s;
-        for (int i = 0; i < maxTasks; i++) {
-            val queryMap = new HashMap<String, String>();
-            queryMap.put("idUser", userId);
-            queryMap.put("start", Integer.toString(start));
-            queryMap.put("maxResults", Integer.toString(maxResults));
-            CompletableFuture<List<OtherUserArticle>> userArticlesFuture = client.sendGetRequest(queryMap,
-                    "users/" + queryMap.get("idUser") + "/articles",
-                    new TypeReference<GetOtherUserArticleResponse>() {})
-                .thenApply(GetOtherUserArticleResponse::getArticles);
-            futures.add(userArticlesFuture);
-            start += maxResults;
-        }
+    private CompletableFuture<List<List<OtherUserArticle>>> getUserArticlesRecursive(
+            final int start, final int maxTasks, int maxResults, final String userId) {
 
-        CompletableFuture<List<List<OtherUserArticle>>> sequence = sequencer.sequence(futures);
-
-        int finalStart = start;
-        return sequence.thenCompose(f -> {
-            articles.addAll(f);
+        return IntStream.range(0, maxTasks)
+                .boxed()
+                .map(i -> {
+                    val queryMap = new HashMap<String, String>();
+                    queryMap.put("idUser", userId);
+                    queryMap.put("start", Integer.toString(start + i * maxResults));
+                    queryMap.put("maxResults", Integer.toString(maxResults));
+                    return client.sendGetRequest(queryMap,
+                            "users/" + queryMap.get("idUser") + "/articles",
+                            new TypeReference<GetOtherUserArticleResponse>() {
+                            })
+                            .thenApply(GetOtherUserArticleResponse::getArticles);
+                })
+                .collect(FutureCollectors.sequenceCollector())
+                .thenCompose(f -> {
             if (f.stream().noneMatch(l -> l == null || l.isEmpty() || l.size() < maxResults)) {
-                return createTasksOtherUsers(finalStart, maxTasks, maxResults, articles, userId);
+                return getUserArticlesRecursive(start + maxResults, maxTasks, maxResults, userId)
+                        .thenApply(newArticles -> {
+                            newArticles.addAll(f);
+                            return newArticles;
+                        });
             }
-            return CompletableFuture.completedFuture(articles);
+            return CompletableFuture.completedFuture(f);
         });
     }
 
-    private Pair<Integer, CompletableFuture<List<List<MyArticle>>>> createTasks(final int s, final int maxTasks,
-                                                                                int maxResults, List<List<MyArticle>> articles) {
-        final List<CompletableFuture<List<MyArticle>>> futures = new ArrayList<>();
-        int start = s;
-        for (int i = 0; i < maxTasks; i++) {
-            CompletableFuture<List<MyArticle>> userArticlesFuture = client.sendGetRequest(
-                    Collections.emptyMap(),
-                    "stock/" + start,
-                    new TypeReference<GetStockResponse>() {})
-                .thenApply(GetStockResponse::getArticles);
-            futures.add(userArticlesFuture);
-            start += maxResults;
-        }
-
-        CompletableFuture<List<List<MyArticle>>> sequence = sequencer.sequence(futures);
-
-        int finalStart = start;
-        CompletableFuture<List<List<MyArticle>>> listCompletableFuture = sequence.thenCompose(f -> {
-            articles.addAll(f);
-            if (f.stream().noneMatch(l -> l == null || l.isEmpty() || l.size() < maxResults)) {
-                return createTasks(finalStart, maxTasks, maxResults, articles).getRight();
-            }
-            return CompletableFuture.completedFuture(articles);
-        });
-
-
-        return MutablePair.of(start, listCompletableFuture);
+    private CompletableFuture<List<List<MyArticle>>> getStockRecursive(final int start, final int maxTasks, int maxResults) {
+        return IntStream.range(0, maxTasks)
+                .boxed()
+                .map(i -> client.sendGetRequest("stock/" + (start + i * maxResults), new TypeReference<GetStockResponse>() {})
+                    .thenApply(GetStockResponse::getArticles))
+                .collect(FutureCollectors.sequenceCollector())
+                .thenCompose(f -> {
+                    if (f.stream().noneMatch(l -> l == null || l.isEmpty() || l.size() < maxResults)) {
+                        final int nextStart = start + maxResults * maxTasks;
+                        return getStockRecursive(nextStart, maxTasks, maxResults)
+                                .thenApply(newArticles -> {
+                                    newArticles.addAll(f);
+                                    return newArticles;
+                                });
+                    }
+                    return CompletableFuture.completedFuture(f);
+                });
     }
 }
