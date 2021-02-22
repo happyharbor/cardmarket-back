@@ -36,14 +36,4 @@ class ClientServiceImplTest {
         final List<MyArticle> stock = clientService.getStock().join();
         assertEquals(10, stock.size());
     }
-
-    @Test
-    void getStock_timeout() {
-        CompletableFuture<Object> timedOutFuture = new CompletableFuture<>();
-        timedOutFuture.completeExceptionally(new TimeoutException());
-        when(cardmarketClientMock.sendGetRequest(any(), any())).thenReturn(timedOutFuture);
-
-        final List<MyArticle> stock = clientService.getStock().join();
-        assertEquals(10, stock.size());
-    }
 }
