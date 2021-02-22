@@ -41,7 +41,7 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    @Scheduled(cron = "0 5 * * 3")
+    @Scheduled(cron = "0 5 * * 2,3")
     public void updatePrices() {
         log.debug("Update prices starting...");
 
