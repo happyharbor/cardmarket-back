@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+<property name="LOGS" value="./logs" />
+
+<appender name="Console"
+          class="ch.qos.logback.core.ConsoleAppender">
+    <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+    </layout>
+</appender>
+
+<appender name="RollingFile"
+          class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOGS}/cardmarket.log</file>
+    <encoder
+            class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        <Pattern>${FILE_LOG_PATTERN}</Pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+        <fileNamePattern>${LOGS}/cardmarket.%i.log.zip</fileNamePattern>
+        <minIndex>1</minIndex>
+        <maxIndex>20</maxIndex>
+    </rollingPolicy>
+
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+        <maxFileSize>10MB</maxFileSize>
+    </triggeringPolicy>
+</appender>
+
+<!-- LOG everything at INFO level -->
+<root level="info">
+    <appender-ref ref="RollingFile" />
+    <appender-ref ref="Console" />
+</root>
+
+<!-- LOG "io.happyharbor.cardmarket*" at TRACE level -->
+<logger name="io.happyharbor.cardmarket" level="trace" additivity="false">
+    <appender-ref ref="RollingFile" />
+    <appender-ref ref="Console" />
+</logger>
+
+</configuration>

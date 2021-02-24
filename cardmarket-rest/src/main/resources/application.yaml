@@ -1,13 +1,6 @@
 server:
   port: 8081
 
-logging:
-  file:
-    name: ../logs/cardmarket.log
-  level:
-    root: info
-    io.happyharbor: debug
-
 client:
   host: https://api.cardmarket.com/ws/v2.0/output.json/
   credentials:
