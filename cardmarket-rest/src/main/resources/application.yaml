@@ -19,3 +19,6 @@ price:
   percentage-of-powersellers: 0.3
   change-price-threshold: 0.2
   too-high-price-threshold: 2.0
+
+schedule:
+  update-prices: 0 0 5 * * 1
