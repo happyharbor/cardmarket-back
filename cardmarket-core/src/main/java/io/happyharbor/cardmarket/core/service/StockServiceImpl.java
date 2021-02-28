@@ -9,7 +9,6 @@ import io.happyharbor.cardmarket.core.csv.CsvHelper;
 import io.happyharbor.cardmarket.core.property.PriceProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -41,7 +40,6 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 5 * * 4")
     public void updatePrices() {
         log.debug("Update prices starting...");
 
