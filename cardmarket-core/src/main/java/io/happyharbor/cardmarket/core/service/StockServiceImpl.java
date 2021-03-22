@@ -62,7 +62,7 @@ public class StockServiceImpl implements StockService {
                     .price(e.getValue())
                     .build())
                     .collect(toList());
-            final String filePath = String.format("%s.csv", user);
+            final String filePath = String.format("%s%s.csv", "powerArticles/", user);
             csvHelper.saveToCsv(filePath, csvArticles);
             userArticles.forEach((k, v) -> articles.computeIfAbsent(k, a -> new LinkedList<>()).add(v));
         });
@@ -76,7 +76,7 @@ public class StockServiceImpl implements StockService {
         List<MyArticle> articlesToUpdate = getArticlesToUpdate(stock, articlePrice);
         clientService.updateArticles(articlesToUpdate).join();
 
-        log.debug("Prices Updated");
+        log.info("Prices Updated");
     }
 
     @Override
@@ -113,7 +113,7 @@ public class StockServiceImpl implements StockService {
         List<MyArticle> articlesToUpdate = getArticlesToUpdate(stock, articlePrice);
         clientService.updateArticles(articlesToUpdate).join();
 
-        log.debug("Prices Updated from csv");
+        log.info("Prices Updated from csv");
     }
 
     private List<MyArticle> getArticlesToUpdate(List<MyArticle> stock, Map<GroupedArticle, BigDecimal> articlePrice) {

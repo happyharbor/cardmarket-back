@@ -1,8 +1,10 @@
 package io.happyharbor.cardmarket.api.lib;
 
+import com.spotify.futures.CompletableFutures;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -60,26 +62,12 @@ public final class FutureCollectors {
     /**
      * Collector that collects Completable Futures of T to a Completable Futures of List of T.
      * The Completable Future will not stop on any error and complete normally.
+     * @param defaultValueFunction the default value
      * @param <T> the payload of the Completable Future
      * @return a list of Completable Futures of T
      */
-    public static <T> Collector<CompletableFuture<T>, ?, CompletableFuture<List<T>>> sequenceNoFailCollector() {
-        return Collectors.collectingAndThen(Collectors.toList(), com -> {
-            com.removeIf(f -> {
-                final AtomicBoolean filter = new AtomicBoolean(false);
-                f.whenComplete((t, ex) -> {
-                    if (ex != null) {
-                        filter.set(true);
-                    }
-                });
-                return filter.get();
-            });
-
-            return CompletableFuture.allOf(com.toArray(new CompletableFuture<?>[0]))
-                    .thenApply(v -> com.stream()
-                            .map(CompletableFuture::join)
-                            .collect(Collectors.toList())
-                    );
-        });
+    public static <T> Collector<CompletableFuture<T>, ?, CompletableFuture<List<T>>> sequenceNoFailCollector(
+            final Function<Throwable, ? extends T> defaultValueFunction) {
+        return Collectors.collectingAndThen(Collectors.toList(), futures -> CompletableFutures.successfulAsList(futures, defaultValueFunction));
     }
 }
