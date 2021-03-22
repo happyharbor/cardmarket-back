@@ -22,6 +22,7 @@ dependencies {
             'com.fasterxml.jackson.datatype:jackson-datatype-jsr310',
             'org.apache.commons:commons-lang3',
             'net.jodah:failsafe',
+            'com.spotify:completable-futures',
             'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 
     implementation 'org.springframework.boot:spring-boot-starter'

@@ -16,6 +16,7 @@ dependencies {
         api 'org.projectlombok:lombok:1.18.16',
                 'org.apache.commons:commons-lang3:3.11',
                 'net.jodah:failsafe:2.4.0',
+                'com.spotify:completable-futures:0.3.4',
                 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.4',
                 'com.opencsv:opencsv:5.3'
     }

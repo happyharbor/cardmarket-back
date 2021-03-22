@@ -21,4 +21,4 @@ price:
   too-high-price-threshold: 2.0
 
 schedule:
-  update-prices: 0 0 5 * * 1
+  update-prices: 0 0 5 * * 2

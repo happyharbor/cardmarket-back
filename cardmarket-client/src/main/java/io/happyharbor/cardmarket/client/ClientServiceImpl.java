@@ -1,6 +1,7 @@
 package io.happyharbor.cardmarket.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.spotify.futures.CompletableFutures;
 import io.happyharbor.cardmarket.api.dto.Account;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
@@ -77,8 +78,8 @@ public class ClientServiceImpl implements ClientService {
                         new TypeReference<UpdateArticleResponse>() {},
                         new UpdateArticlesRequestOuter(as.stream().map(UpdateArticlesRequest::of).collect(toList()))))
                 .map(f -> f.thenApply(UpdateArticleResponse::getNotUpdatedArticles))
-                .collect(FutureCollectors.sequenceStreamCollector())
-                .thenApply(f -> f.flatMap(List::stream).collect(toList()))
+                .collect(CompletableFutures.joinList())
+                .thenApply(f -> f.stream().flatMap(List::stream).collect(toList()))
                 .thenApply(notUpdatedArticles -> {
                     notUpdatedArticles.forEach(a -> log.warn("Article: {} was not updated, because: {}", a.getArticle(), a.getError()));
                     return notUpdatedArticles;
@@ -96,6 +97,8 @@ public class ClientServiceImpl implements ClientService {
     private CompletableFuture<List<List<OtherUserArticle>>> getUserArticlesRecursive(
             final int start, final int maxTasks, int maxResults, final String userId) {
 
+        final List<OtherUserArticle> fakeArticles = getFakeArticles(maxResults);
+
         return IntStream.range(0, maxTasks)
                 .boxed()
                 .map(i -> {
@@ -109,7 +112,10 @@ public class ClientServiceImpl implements ClientService {
                             })
                             .thenApply(GetOtherUserArticleResponse::getArticles);
                 })
-                .collect(FutureCollectors.sequenceCollector())
+                .collect(FutureCollectors.sequenceNoFailCollector(t -> {
+                    log.debug("Get user articles for user {}, failed due to {}", userId, t.getMessage());
+                    return fakeArticles;
+                }))
                 .thenCompose(f -> {
             if (f.stream().noneMatch(l -> l == null || l.isEmpty() || l.size() < maxResults)) {
                 return getUserArticlesRecursive(start + maxResults, maxTasks, maxResults, userId)
@@ -127,7 +133,7 @@ public class ClientServiceImpl implements ClientService {
                 .boxed()
                 .map(i -> client.sendGetRequest("stock/" + (start + i * maxResults), new TypeReference<GetStockResponse>() {})
                     .thenApply(GetStockResponse::getArticles))
-                .collect(FutureCollectors.sequenceCollector())
+                .collect(CompletableFutures.joinList())
                 .thenCompose(f -> {
                     if (f.stream().noneMatch(l -> l == null || l.isEmpty() || l.size() < maxResults)) {
                         final int nextStart = start + maxResults * maxTasks;
@@ -139,5 +145,12 @@ public class ClientServiceImpl implements ClientService {
                     }
                     return CompletableFuture.completedFuture(f);
                 });
+    }
+
+    private static List<OtherUserArticle> getFakeArticles(final int maxResults) {
+        return IntStream.range(0, maxResults)
+                .boxed()
+                .map(i -> OtherUserArticle.builder().build())
+                .collect(toList());
     }
 }
