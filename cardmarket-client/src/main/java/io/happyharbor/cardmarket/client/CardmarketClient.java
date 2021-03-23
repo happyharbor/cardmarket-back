@@ -8,8 +8,6 @@ import io.happyharbor.cardmarket.client.property.OauthProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.jodah.failsafe.Failsafe;
-import net.jodah.failsafe.RetryPolicy;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.net.ConnectException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -143,12 +140,7 @@ public class CardmarketClient {
     }
 
     private <T> CompletableFuture<T> sendRequest(HttpRequest request, TypeReference<T> typeReference) {
-        RetryPolicy<Object> retryPolicy = new RetryPolicy<>()
-                .handle(ConnectException.class)
-                .withDelay(Duration.ofSeconds(1))
-                .withMaxRetries(3);
-
-        return Failsafe.with(retryPolicy).get(() -> client.sendAsync(request, new JsonBodyHandler<>(typeReference)))
+        return client.sendAsync(request, new JsonBodyHandler<>(typeReference))
                 .thenApply((HttpResponse<Supplier<T>> supplierHttpResponse) -> {
                     if (supplierHttpResponse.statusCode() >= 200 && supplierHttpResponse.statusCode() < 300) {
                         return supplierHttpResponse.body().get();
