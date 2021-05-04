@@ -1,0 +1,5 @@
+databaseChangeLog:
+- changeLogId: f23c8811-b290-4452-ac1e-f805742fe6e8
+- includeAll:
+    - path: changelog/
+    - relativeToChangelogFile: true
