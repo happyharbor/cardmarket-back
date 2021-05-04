@@ -2,16 +2,24 @@ plugins {
     id 'java'
 }
 
-dependencies {
-    implementation platform(project(':cardmarket-platform'))
-    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
-    annotationProcessor platform(project(':cardmarket-platform'))
+sourceCompatibility = '11'
 
-    implementation 'com.fasterxml.jackson.core:jackson-annotations',
-            'com.spotify:completable-futures'
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    implementation platform(project(':cardmarket-platform')),
+            'com.fasterxml.jackson.core:jackson-annotations',
+            'com.spotify:completable-futures',
+            'org.junit.jupiter:junit-jupiter'
 
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+
+    annotationProcessor platform(project(':cardmarket-platform')),
+            'org.projectlombok:lombok'
 }
 
 test {

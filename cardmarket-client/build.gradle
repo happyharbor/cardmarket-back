@@ -12,22 +12,22 @@ configurations {
 }
 
 dependencies {
-    implementation platform(project(':cardmarket-platform'))
-    annotationProcessor platform(project(':cardmarket-platform')),
-            'org.springframework.boot:spring-boot-configuration-processor'
-
-    implementation project(':cardmarket-api'),
+    implementation platform(project(':cardmarket-platform')),
+            project(':cardmarket-api'),
             'com.fasterxml.jackson.core:jackson-core',
             'com.fasterxml.jackson.core:jackson-databind',
+            'com.fasterxml.jackson.dataformat:jackson-dataformat-xml',
             'com.fasterxml.jackson.datatype:jackson-datatype-jsr310',
-            'org.apache.commons:commons-lang3',
-            'net.jodah:failsafe',
             'com.spotify:completable-futures',
-            'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
+            'net.jodah:failsafe',
+            'org.apache.commons:commons-lang3',
+            'org.springframework.boot:spring-boot-starter'
 
-    implementation 'org.springframework.boot:spring-boot-starter'
+    annotationProcessor platform(project(':cardmarket-platform')),
+            'org.projectlombok:lombok',
+            'org.springframework.boot:spring-boot-configuration-processor'
+
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

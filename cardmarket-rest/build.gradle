@@ -5,10 +5,6 @@ plugins {
 
 sourceCompatibility = '11'
 
-bootJar {
-    enabled = true
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -16,15 +12,22 @@ configurations {
 }
 
 dependencies {
-    implementation platform(project(':cardmarket-platform'))
-    annotationProcessor platform(project(':cardmarket-platform'))
+    implementation platform(project(':cardmarket-platform')),
+            project(':login-api'),
+            project(':login-core'),
+            project(':cardmarket-api'),
+            project(':cardmarket-core'),
+            'org.springframework.boot:spring-boot-starter-web',
+            'org.springframework.boot:spring-boot-starter-validation',
+            'org.springframework.boot:spring-boot-starter-security',
+            'org.springdoc:springdoc-openapi-ui',
+            'org.springdoc:springdoc-openapi-security'
 
-    implementation project(':cardmarket-api'),
-            project(':cardmarket-core')
+    annotationProcessor platform(project(':cardmarket-platform')),
+            'org.springframework.boot:spring-boot-configuration-processor',
+            'org.projectlombok:lombok'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

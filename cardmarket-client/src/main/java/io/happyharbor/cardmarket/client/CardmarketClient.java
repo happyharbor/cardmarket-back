@@ -1,6 +1,7 @@
 package io.happyharbor.cardmarket.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import io.happyharbor.cardmarket.client.property.ClientProperties;
 import io.happyharbor.cardmarket.client.property.CredentialProperties;
@@ -37,7 +38,7 @@ public class CardmarketClient {
     private final CredentialProperties credentialProperties;
     private final OauthProperties oauthProperties;
     private final HttpClient client;
-    private final XmlMapper objectMapper;
+    private final XmlMapper xmlMapper = xmlMapper();
 
     public <T> CompletableFuture<T> sendGetRequest(final Map<String, String> queryMap, final String endpoint, final TypeReference<T> typeReference) {
         HttpRequest request = generateGetRequest(queryMap, endpoint);
@@ -63,6 +64,12 @@ public class CardmarketClient {
         return sendPutRequest(Collections.emptyMap(), endpoint, typeReference, payload);
     }
 
+    private XmlMapper xmlMapper() {
+        XmlMapper mapper = new XmlMapper();
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        return mapper;
+    }
+
     private HttpRequest generateGetRequest(final Map<String, String> queryMap, final String endpoint) {
 
         final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "GET");
@@ -81,7 +88,7 @@ public class CardmarketClient {
 
         final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "PUT");
 
-        String json = objectMapper.writeValueAsString(payload);
+        String json = xmlMapper.writeValueAsString(payload);
 
         return HttpRequest.newBuilder()
                 .uri(URI.create(urlAuthHeader.getLeft()))

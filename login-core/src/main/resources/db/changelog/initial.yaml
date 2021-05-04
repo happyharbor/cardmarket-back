@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1619290915543-1
+      author: trixobird (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: application_userPK
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: create_ts
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: modify_ts
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+            tableName: application_user
+  - changeSet:
+      id: 1619290915543-2
+      author: trixobird (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: application_user_id
+                  type: UUID
+              - column:
+                  name: roles
+                  type: INTEGER
+            tableName: application_user_roles
+  - changeSet:
+      id: 1619290915543-3
+      author: trixobird (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: UK_jikj2qt0q6ushfg8enud3ed87
+            tableName: application_user
+  - changeSet:
+      id: 1619290915543-4
+      author: trixobird (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: application_user_id
+            baseTableName: application_user_roles
+            constraintName: FK9hwva08h4u671cqxpexx1dx7i
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: application_user
+            validate: true
+

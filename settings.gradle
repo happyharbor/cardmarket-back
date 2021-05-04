@@ -4,3 +4,6 @@ include 'cardmarket-api'
 include 'cardmarket-core'
 include 'cardmarket-client'
 include 'cardmarket-rest'
+include 'login-api'
+include 'login-core'
+

@@ -1,0 +1,63 @@
+plugins {
+    id "io.spring.dependency-management" version "${springDependencyManagmentVersion}"
+    id 'java'
+    id 'org.liquibase.gradle' version '2.0.4'
+}
+
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+dependencies {
+    implementation platform(project(':cardmarket-platform')),
+            project(':login-api'),
+            'org.springframework.boot:spring-boot-starter-data-jpa',
+            'org.springframework.boot:spring-boot-starter-security',
+            'io.jsonwebtoken:jjwt-api'
+
+    liquibaseRuntime 'javax.xml.bind:jaxb-api:2.3.1',
+            'org.postgresql:postgresql:42.2.19',
+            'org.liquibase:liquibase-core:4.3.2',
+            'org.liquibase.ext:liquibase-hibernate5:4.0.0',
+            sourceSets.main.output,
+            sourceSets.main.runtimeClasspath
+
+    annotationProcessor platform(project(':cardmarket-platform')),
+            'org.springframework.boot:spring-boot-configuration-processor',
+            'org.projectlombok:lombok'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl',
+            'io.jsonwebtoken:jjwt-jackson',
+            'org.liquibase:liquibase-core',
+            'org.postgresql:postgresql'
+}
+
+liquibase {
+    diff.dependsOn assemble
+    diffChangeLog.dependsOn assemble
+
+    def props = new Properties()
+    file("src/main/resources/liquibase.properties").withInputStream { props.load(it) }
+
+    activities {
+        diff {
+            changeLogFile props.getProperty("liquibase.changelog.diff")
+            url props.getProperty("url")
+            username props.getProperty("username")
+            password props.getProperty("password")
+            referenceDriver props.getProperty("referenceDriver")
+            referenceUrl props.getProperty("liquibase.changelog.referenceUrl")
+        }
+    }
+    runList = 'diff'
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -1,5 +1,28 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/login-service
+    platform: postgres
+    driverClassName: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    database: POSTGRESQL
+    hibernate.ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties.hibernate:
+      jdbc.time_zone: UTC
+  liquibase:
+    change-log: classpath:/db/db.changelog-master.yaml
 server:
   port: 8081
+
+security:
+  jwt:
+    token:
+      secret-key: 9hhryXSTsj5kx5srqeHuatufEFGrXfKVAhawMdUYRsRvLEbRa58AEvge2xGcjX59eSfBwCr
+      expire-length: 7200
+
+springdoc:
+  show-login-endpoint: true
 
 client:
   host: https://api.cardmarket.com/ws/v2.0/output.json/
