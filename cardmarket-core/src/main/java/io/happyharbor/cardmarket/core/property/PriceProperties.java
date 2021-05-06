@@ -12,7 +12,13 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 @Getter
 public class PriceProperties {
-    private final BigDecimal percentageOfPowersellers;
+    private final Integer pricesToKeep;
+    /**
+     * For example 1.33 means that an article that is 33% more expensive comparing to cardmarket will not be updated
+     */
     private final BigDecimal changePriceThreshold;
-    private final Double tooHighPriceThreshold;
+    /**
+     * Any article with less than this price will be updated independent of {@link #getChangePriceThreshold()}
+     */
+    private final BigDecimal tooHighPriceThreshold;
 }

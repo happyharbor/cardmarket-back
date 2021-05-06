@@ -2,3 +2,8 @@ spring:
   datasource:
     username: pi
     password: kaRvvmDJpqu8DzHvrLBJCtMjy8B3uU
+
+security:
+  jwt:
+    token:
+      expire-length: 18000

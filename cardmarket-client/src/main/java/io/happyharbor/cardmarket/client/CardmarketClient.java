@@ -9,6 +9,7 @@ import io.happyharbor.cardmarket.client.property.OauthProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -42,7 +43,6 @@ public class CardmarketClient {
 
     public <T> CompletableFuture<T> sendGetRequest(final Map<String, String> queryMap, final String endpoint, final TypeReference<T> typeReference) {
         HttpRequest request = generateGetRequest(queryMap, endpoint);
-
         return sendRequest(request, typeReference);
     }
 
@@ -65,7 +65,7 @@ public class CardmarketClient {
     }
 
     private XmlMapper xmlMapper() {
-        XmlMapper mapper = new XmlMapper();
+        val mapper = new XmlMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         return mapper;
     }
@@ -88,7 +88,7 @@ public class CardmarketClient {
 
         final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "PUT");
 
-        String json = xmlMapper.writeValueAsString(payload);
+        val json = xmlMapper.writeValueAsString(payload);
 
         return HttpRequest.newBuilder()
                 .uri(URI.create(urlAuthHeader.getLeft()))
@@ -110,7 +110,7 @@ public class CardmarketClient {
         headers.put("oauth_signature_method", oauthProperties.getSignature());
         headers.put("oauth_version", oauthProperties.getVersion());
 
-        StringBuilder sb = new StringBuilder();
+        val sb = new StringBuilder();
         sb.append(method)
                 .append("&")
                 .append(URLEncoder.encode(url, UTF_8))
@@ -128,11 +128,11 @@ public class CardmarketClient {
                 "&" +
                 URLEncoder.encode(credentialProperties.getAccessTokenSecret(), UTF_8);
 
-        Mac mac = Mac.getInstance("HmacSHA1");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(signingKey.getBytes(UTF_8), "HmacSHA1");
+        val mac = Mac.getInstance("HmacSHA1");
+        val secretKeySpec = new SecretKeySpec(signingKey.getBytes(UTF_8), "HmacSHA1");
         mac.init(secretKeySpec);
         final byte[] bytes = mac.doFinal(sb.toString().getBytes(UTF_8));
-        final String signature = Base64.getEncoder().encodeToString(bytes);
+        val signature = Base64.getEncoder().encodeToString(bytes);
         headers.put("oauth_signature", signature);
 
         final String authSignature = headers.entrySet()
