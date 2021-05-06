@@ -8,6 +8,7 @@ import io.happyharbor.cardmarket.core.csv.CsvArticle;
 import io.happyharbor.cardmarket.core.csv.CsvHelper;
 import io.happyharbor.cardmarket.core.property.PriceProperties;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -62,18 +63,15 @@ public class StockServiceImpl implements StockService {
                     .price(e.getValue())
                     .build())
                     .collect(toList());
-            final String filePath = String.format("%s%s.csv", "powerArticles/", user);
+            var filePath = String.format("%s%s.csv", "powerArticles/", user);
             csvHelper.saveToCsv(filePath, csvArticles);
             userArticles.forEach((k, v) -> articles.computeIfAbsent(k, a -> new LinkedList<>()).add(v));
         });
 
-        Map<GroupedArticle, BigDecimal> articlePrice = articles.entrySet().stream().collect(toMap(
-                Map.Entry::getKey,
-                e -> upperTrimmedMean(e.getValue(), priceProperties.getPercentageOfPowersellers())
-        ));
+        Map<GroupedArticle, BigDecimal> articlePriceMap = mergePowerSellerPrices(articles);
 
         List<MyArticle> stock = stockFuture.join();
-        List<MyArticle> articlesToUpdate = getArticlesToUpdate(stock, articlePrice);
+        List<MyArticle> articlesToUpdate = getArticlesToUpdate(stock, articlePriceMap);
         clientService.updateArticles(articlesToUpdate).join();
 
         log.info("Prices Updated");
@@ -85,7 +83,7 @@ public class StockServiceImpl implements StockService {
 
         CompletableFuture<List<MyArticle>> stockFuture = clientService.getStock();
 
-        Map<GroupedArticle, BigDecimal> articlePrice = csvHelper.loadCsvs().stream()
+        val powerSellersPrices = csvHelper.loadCsvs().stream()
                 .map(r -> csvHelper.readCsv(r, CsvArticle.class))
                 .map(csvArticles -> csvArticles.stream()
                         .collect(toMap(CsvArticle::toGroupedArticle,
@@ -102,58 +100,64 @@ public class StockServiceImpl implements StockService {
                     });
                     return groupedArticleListMap;
                 })
-                .orElseThrow()
-                .entrySet()
-                .stream()
-                .collect(toMap(Map.Entry::getKey,
-                        e -> upperTrimmedMean(e.getValue(), priceProperties.getPercentageOfPowersellers())
-                ));
+                .orElseThrow();
+
+        Map<GroupedArticle, BigDecimal> articlePriceMap = mergePowerSellerPrices(powerSellersPrices);
 
         List<MyArticle> stock = stockFuture.join();
-        List<MyArticle> articlesToUpdate = getArticlesToUpdate(stock, articlePrice);
+        List<MyArticle> articlesToUpdate = getArticlesToUpdate(stock, articlePriceMap);
         clientService.updateArticles(articlesToUpdate).join();
 
         log.info("Prices Updated from csv");
     }
 
+    private Map<GroupedArticle, BigDecimal> mergePowerSellerPrices(final Map<GroupedArticle, List<BigDecimal>> groupedArticleListMap1) {
+        return groupedArticleListMap1
+                .entrySet()
+                .stream()
+                .collect(toMap(Map.Entry::getKey,
+                        e -> mergePrices(e.getValue())
+                ));
+    }
+
     private List<MyArticle> getArticlesToUpdate(List<MyArticle> stock, Map<GroupedArticle, BigDecimal> articlePrice) {
 
         return stock.stream()
-                .filter(a -> a.getProduct().getCollectorsNumber() != null) // only singles
-                .filter(a -> {
-                    boolean containsArticle = articlePrice.containsKey(new GroupedArticle(a));
+                .filter(myArticle -> myArticle.getProduct().getCollectorsNumber() != null) // only singles
+                .filter(myArticle -> {
+                    boolean containsArticle = articlePrice.containsKey(new GroupedArticle(myArticle));
                     if (!containsArticle) {
-                        log.debug("Article is not found to any other user: {}", a);
+                        log.debug("Article is not found to any other user: {}", myArticle);
                     }
                     return containsArticle;
                 })
-                .filter(a -> {
-                    BigDecimal cardmarketPrice = articlePrice.get(new GroupedArticle(a));
-                    BigDecimal increaseRatio = a.getPrice().subtract(cardmarketPrice)
-                            .divide(cardmarketPrice, RoundingMode.FLOOR);
-                    if (increaseRatio.doubleValue() > priceProperties.getTooHighPriceThreshold()) {
-                        log.info("Article has too high price, should be changed manually: {}", a);
+                .filter(myArticle -> {
+                    BigDecimal cardmarketPrice = articlePrice.get(new GroupedArticle(myArticle));
+                    if (myArticle.getPrice().compareTo(priceProperties.getTooHighPriceThreshold()) > 0 &&
+                            myArticle.getPrice().compareTo(cardmarketPrice.multiply(priceProperties.getChangePriceThreshold())) > 0) {
+                        log.info("Article has too high price, should be changed manually: {}", myArticle);
+                        return false;
                     }
-                    return increaseRatio.compareTo(priceProperties.getChangePriceThreshold()) < 1;
+                    return true;
                 })
                 .filter(a -> articlePrice.get(new GroupedArticle(a)).compareTo(a.getPrice()) != 0)
                 .map(a -> a.toBuilder().price(articlePrice.get(new GroupedArticle(a))).build())
                 .collect(Collectors.toList());
     }
 
-    public BigDecimal upperTrimmedMean(List<BigDecimal> observations, BigDecimal percentage)
+    public BigDecimal mergePrices(List<BigDecimal> observations)
     {
-        List<BigDecimal> sorted = observations.stream().sorted().collect(toList());
-        var n = sorted.size();
-        var k = percentage.multiply(new BigDecimal(n)).setScale(0, RoundingMode.UP).intValue();
-        k = k == 0 ? 1 : k;
+        if (observations.size() == 1) {
+            return observations.get(0);
+        }
 
-        var mean = BigDecimal.ZERO;
-        n = n - k > 0 ? k : n;
+        val keptObservations = observations.stream()
+                .sorted()
+                .limit(priceProperties.getPricesToKeep())
+                .collect(toList());
 
-        for (var i = 0; i < n; i++)
-            mean = mean.add(sorted.get(i));
-
-        return mean.divide(new BigDecimal(n), RoundingMode.FLOOR);
+        return keptObservations.stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .divide(new BigDecimal(keptObservations.size()), RoundingMode.FLOOR);
     }
 }

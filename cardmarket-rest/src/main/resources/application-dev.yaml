@@ -2,3 +2,8 @@ spring:
   datasource:
     username: postgres
     password: postgres
+
+security:
+  jwt:
+    token:
+      expire-length: 180000

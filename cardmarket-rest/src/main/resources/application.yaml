@@ -19,7 +19,6 @@ security:
   jwt:
     token:
       secret-key: 9hhryXSTsj5kx5srqeHuatufEFGrXfKVAhawMdUYRsRvLEbRa58AEvge2xGcjX59eSfBwCr
-      expire-length: 7200
 
 springdoc:
   show-login-endpoint: true
@@ -36,11 +35,11 @@ client:
     signature: HMAC-SHA1
     version: 1.0
 
-power-users: Arcana-Trieste, Bazaarofmagic, BB-Spiele, CARAB, CardsMania, cernyrytir, DonMTG, DRAGONCT, Dunkler-Herrscher, Eurekagames, FKTRD, Galactus-Roma, Games-Island, Goat-enterprise, Hobby-Games, HiveGames, Itaca, JK-Entertainment, karmacrow, MagicBarcelona, MagicBazar, Magicdealer-patte-de, magictime-it, MagicTradeHouseNo1, Manamaze, Mazvigosl, MTG-AGORA, Mtgspot, MTGWARHAMMER, NobleGarden, Olli-Baba, OutpostBrussels, Outpostgamecenter, Rarehuntershop, RetroMagic, SeventhCity, TEMPEST-STORE, ThreeForOne-AT, willybizarre, WizardshopCz
+power-users: Arcana-Trieste, Bazaarofmagic, BB-Spiele, CARAB, CardsMania, cernyrytir, DonMTG, DRAGONCT, Dunkler-Herrscher, Eurekagames, FKTRD, Galactus-Roma, Games-Island, Goat-enterprise, Hobby-Games, HiveGames, Itaca, JK-Entertainment, karmacrow, Legacytcg, MagicBarcelona, Magicdealer-patte-de, magictime-it, MagicTradeHouseNo1, Manamaze, Mazvigosl, MTG-AGORA, Mtgspot, MTGWARHAMMER, NobleGarden, Olli-Baba, OutpostBrussels, Outpostgamecenter, Rarehuntershop, RetroMagic, SeventhCity, TEMPEST-STORE, ThreeForOne-AT, willybizarre, WizardshopCz
 
 price:
-  percentage-of-powersellers: 0.3
-  change-price-threshold: 0.2
+  prices-to-keep: 2
+  change-price-threshold: 1.3
   too-high-price-threshold: 2.0
 
 schedule:
