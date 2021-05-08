@@ -13,7 +13,6 @@ configurations {
 dependencies {
     implementation platform(project(':cardmarket-platform')),
             'com.fasterxml.jackson.core:jackson-annotations',
-            'com.spotify:completable-futures',
             'org.junit.jupiter:junit-jupiter'
 
     compileOnly 'org.projectlombok:lombok'
