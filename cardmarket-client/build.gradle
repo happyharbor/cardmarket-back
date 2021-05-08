@@ -18,7 +18,6 @@ dependencies {
             'com.fasterxml.jackson.core:jackson-databind',
             'com.fasterxml.jackson.dataformat:jackson-dataformat-xml',
             'com.fasterxml.jackson.datatype:jackson-datatype-jsr310',
-            'com.spotify:completable-futures',
             'net.jodah:failsafe',
             'org.apache.commons:commons-lang3',
             'org.springframework.boot:spring-boot-starter'

@@ -16,7 +16,6 @@ dependencies {
         api 'org.projectlombok:lombok:1.18.16',
                 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.4',
                 'com.opencsv:opencsv:5.3',
-                'com.spotify:completable-futures:0.3.4',
                 'io.jsonwebtoken:jjwt-api:0.11.2',
                 'io.jsonwebtoken:jjwt-impl:0.11.2',
                 'io.jsonwebtoken:jjwt-jackson:0.11.2',
