@@ -2,6 +2,7 @@ package io.happyharbor.cardmarket.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.happyharbor.cardmarket.api.dto.Account;
+import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
 import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
@@ -85,6 +86,13 @@ public class ClientServiceImpl implements ClientService {
         return client.sendGetRequest(String.format("orders/%s/%s", request.getActor().getName(), request.getState().getName()),
                 new TypeReference<GetFilterOrdersResponse>() {})
                 .thenApply(GetFilterOrdersResponse::getOrders);
+    }
+
+    @Override
+    public CompletableFuture<ProductDetailed> getProductsDetails(final Long productId) {
+        return client.sendGetRequest("products/" + productId,
+                new TypeReference<GetProductResponse>() {})
+                .thenApply(GetProductResponse::getProduct);
     }
 
     private List<OtherUserArticle> getUserArticlesRecursive(final int start, final String userId) {

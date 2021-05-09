@@ -1,6 +1,7 @@
 package io.happyharbor.cardmarket.api.service;
 
 import io.happyharbor.cardmarket.api.dto.Account;
+import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
 import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
@@ -22,4 +23,6 @@ public interface ClientService {
     CompletableFuture<List<NotUpdatedArticle>> updateArticles(List<MyArticle> otherUserArticles);
 
     CompletableFuture<List<Order>> getOrdersBy(final FilteredOrdersRequest request);
+
+    CompletableFuture<ProductDetailed> getProductsDetails(Long productId);
 }

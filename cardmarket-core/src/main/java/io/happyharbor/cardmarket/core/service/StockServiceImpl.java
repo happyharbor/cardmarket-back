@@ -145,7 +145,7 @@ public class StockServiceImpl implements StockService {
                 .collect(Collectors.toList());
     }
 
-    public BigDecimal mergePrices(List<BigDecimal> observations)
+    private BigDecimal mergePrices(List<BigDecimal> observations)
     {
         if (observations.size() == 1) {
             return observations.get(0);

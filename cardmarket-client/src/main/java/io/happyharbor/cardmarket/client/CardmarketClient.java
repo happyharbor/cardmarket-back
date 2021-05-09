@@ -88,13 +88,13 @@ public class CardmarketClient {
 
         final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "PUT");
 
-        val json = xmlMapper.writeValueAsString(payload);
+        val xml = xmlMapper.writeValueAsString(payload);
 
         return HttpRequest.newBuilder()
                 .uri(URI.create(urlAuthHeader.getLeft()))
                 .timeout(Duration.ofMinutes(1))
                 .headers("Authorization", "OAuth " + urlAuthHeader.getRight())
-                .PUT(HttpRequest.BodyPublishers.ofString(json))
+                .PUT(HttpRequest.BodyPublishers.ofString(xml))
                 .build();
     }
 
