@@ -5,6 +5,7 @@ import io.happyharbor.cardmarket.api.dto.Account;
 import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
+import io.happyharbor.cardmarket.api.dto.stock.ChangeStockQuantityArticle;
 import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
 import io.happyharbor.cardmarket.api.dto.stock.NotUpdatedArticle;
 import io.happyharbor.cardmarket.api.dto.stock.OtherUserArticle;
@@ -93,6 +94,24 @@ public class ClientServiceImpl implements ClientService {
         return client.sendGetRequest("products/" + productId,
                 new TypeReference<GetProductResponse>() {})
                 .thenApply(GetProductResponse::getProduct);
+    }
+
+    @Override
+    public CompletableFuture<List<MyArticle>> increaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles) {
+        return CompletableFuture.completedFuture(client.sendPutRequest("stock/increase",
+                new TypeReference<IncreaseQuantityArticleResponse>() {},
+                new ChangeQuantityArticlesRequestOuter(changeStockQuantityArticles))
+                .join()
+                .getNotChangedArticles());
+    }
+
+    @Override
+    public CompletableFuture<Void> decreaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles) {
+        client.sendPutRequest("stock/decrease",
+                new TypeReference<DecreaseQuantityArticleResponse>() {},
+                new ChangeQuantityArticlesRequestOuter(changeStockQuantityArticles))
+                .join();
+        return CompletableFuture.completedFuture(null);
     }
 
     private List<OtherUserArticle> getUserArticlesRecursive(final int start, final String userId) {

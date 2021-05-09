@@ -4,6 +4,7 @@ import io.happyharbor.cardmarket.api.dto.Account;
 import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
+import io.happyharbor.cardmarket.api.dto.stock.ChangeStockQuantityArticle;
 import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
 import io.happyharbor.cardmarket.api.dto.stock.NotUpdatedArticle;
 import io.happyharbor.cardmarket.api.helper.GroupedArticle;
@@ -25,4 +26,8 @@ public interface ClientService {
     CompletableFuture<List<Order>> getOrdersBy(final FilteredOrdersRequest request);
 
     CompletableFuture<ProductDetailed> getProductsDetails(Long productId);
+
+    CompletableFuture<List<MyArticle>> increaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles);
+
+    CompletableFuture<Void> decreaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles);
 }
