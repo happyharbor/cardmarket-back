@@ -63,7 +63,7 @@ public class StockServiceImpl implements StockService {
                     .price(e.getValue())
                     .build())
                     .collect(toList());
-            var filePath = String.format("%s%s.csv", "powerArticles/", user);
+            var filePath = String.format("%s%s.csv", "power-users-articles/", user);
             csvHelper.saveToCsv(filePath, csvArticles);
             userArticles.forEach((k, v) -> articles.computeIfAbsent(k, a -> new LinkedList<>()).add(v));
         });
