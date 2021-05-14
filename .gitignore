@@ -17,7 +17,7 @@ out/
 logs/
 
 ### Power sellers articles ###
-powerArticles/*.csv
+power-users-articles/*.csv
 
 ### Liquibase ###
 db.changelog-diff.yaml

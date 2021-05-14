@@ -1,23 +1,21 @@
 package io.happyharbor.cardmarket.core.csv;
 
-import com.opencsv.bean.*;
-import lombok.RequiredArgsConstructor;
+import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import lombok.SneakyThrows;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternUtils;
+import lombok.val;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.Arrays;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class CsvHelper {
-
-    private final ResourceLoader resourceLoader;
 
     @SneakyThrows
     public <T> List<T> readCsv(final File file, Class<? extends T> clazz) {
@@ -26,16 +24,11 @@ public class CsvHelper {
 
     @SneakyThrows
     public List<File> loadCsvs() {
-        Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(resourceLoader)
-                                                   .getResources("classpath*:users-articles/*.csv");
-        return Arrays.stream(resources).map(resource -> {
-            try {
-                return resource.getFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }).collect(Collectors.toList());
+        try (val paths = Files.walk(Paths.get("power-users-articles"))) {
+            return paths.filter(Files::isRegularFile)
+                    .map(Path::toFile)
+                    .collect(Collectors.toList());
+        }
     }
 
     @SneakyThrows
