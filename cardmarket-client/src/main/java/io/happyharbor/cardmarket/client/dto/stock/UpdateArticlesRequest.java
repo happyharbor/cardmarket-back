@@ -1,4 +1,4 @@
-package io.happyharbor.cardmarket.client.dto;
+package io.happyharbor.cardmarket.client.dto.stock;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +19,6 @@ public class UpdateArticlesRequest {
     Integer languageId;
     String comments;
     Long count;
-
     BigDecimal price;
     String condition;
     Boolean isFoil;

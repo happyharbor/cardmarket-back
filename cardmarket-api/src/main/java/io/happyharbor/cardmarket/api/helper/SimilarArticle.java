@@ -8,10 +8,9 @@ import lombok.*;
 @Value
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class GroupedArticle {
+public class SimilarArticle {
 
-    public GroupedArticle(final OtherUserArticle article) {
+    public SimilarArticle(final OtherUserArticle article) {
         this.productId = article.getProductId() ;
         this.language = article.getLanguage() ;
         this.currencyId = article.getCurrencyId() ;
@@ -22,7 +21,7 @@ public class GroupedArticle {
         this.isFirstEd = article.getIsFirstEd() ;
     }
 
-    public GroupedArticle(final MyArticle article) {
+    public SimilarArticle(final MyArticle article) {
         this.productId = article.getProductId() ;
         this.language = article.getLanguage() ;
         this.currencyId = article.getCurrencyId() ;
