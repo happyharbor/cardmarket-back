@@ -2,7 +2,7 @@ package io.happyharbor.cardmarket.core.csv;
 
 import com.opencsv.bean.CsvBindByName;
 import io.happyharbor.cardmarket.api.dto.stock.Language;
-import io.happyharbor.cardmarket.api.helper.GroupedArticle;
+import io.happyharbor.cardmarket.api.helper.SimilarArticle;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -33,8 +33,8 @@ public class CsvArticle {
     @CsvBindByName
     BigDecimal price;
 
-    public GroupedArticle toGroupedArticle() {
-        return GroupedArticle.builder()
+    public SimilarArticle toGroupedArticle() {
+        return SimilarArticle.builder()
                 .productId(this.productId)
                 .language(Language.builder()
                         .languageId(this.languageId)

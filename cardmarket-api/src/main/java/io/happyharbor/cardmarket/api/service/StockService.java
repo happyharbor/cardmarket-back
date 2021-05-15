@@ -4,4 +4,6 @@ public interface StockService {
     void updatePrices();
 
     void updatePricesFromCsv();
+
+    void test();
 }

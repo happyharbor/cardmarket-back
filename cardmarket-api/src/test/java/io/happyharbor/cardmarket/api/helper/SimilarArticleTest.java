@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class GroupedArticleTest {
+class SimilarArticleTest {
 
     @Test
     void test() {
@@ -58,12 +58,12 @@ class GroupedArticleTest {
                         .condition("MT")
                         .build());
 
-        Map<GroupedArticle, BigDecimal> output = otherUserArticles.stream()
+        Map<SimilarArticle, BigDecimal> output = otherUserArticles.stream()
                 .filter(a -> a.getCondition().equals("NM") || a.getCondition().equals("MT"))
-                .collect(Collectors.toMap(GroupedArticle::new, article -> article.getPrices().stream().filter(p -> p.getCurrencyId() == 1).findAny()
+                .collect(Collectors.toMap(SimilarArticle::new, article -> article.getPrices().stream().filter(p -> p.getCurrencyId() == 1).findAny()
                         .orElseThrow().getArticlePrice(), (o1, o2) -> o1.compareTo(o2) > 0 ? o2 : o1));
 
-        assertEquals(Map.of(new GroupedArticle(firstOtherUserArticle), BigDecimal.ONE), output);
+        assertEquals(Map.of(new SimilarArticle(firstOtherUserArticle), BigDecimal.ONE), output);
     }
 
     @Test
@@ -111,11 +111,11 @@ class GroupedArticleTest {
 
         List<OtherUserArticle> otherUserArticles = List.of(firstOtherUserArticle, secondOtherUserArticle);
 
-        Map<GroupedArticle, BigDecimal> output = otherUserArticles.stream()
+        Map<SimilarArticle, BigDecimal> output = otherUserArticles.stream()
                 .filter(a -> a.getCondition().equals("NM") || a.getCondition().equals("MT"))
-                .collect(Collectors.toMap(GroupedArticle::new, article -> article.getPrices().stream().filter(p -> p.getCurrencyId() == 1).findAny()
+                .collect(Collectors.toMap(SimilarArticle::new, article -> article.getPrices().stream().filter(p -> p.getCurrencyId() == 1).findAny()
                         .orElseThrow().getArticlePrice(), (o1, o2) -> o1.compareTo(o2) > 0 ? o2 : o1));
 
-        assertEquals(Map.of(new GroupedArticle(firstOtherUserArticle), BigDecimal.ONE, new GroupedArticle(secondOtherUserArticle), BigDecimal.TEN), output);
+        assertEquals(Map.of(new SimilarArticle(firstOtherUserArticle), BigDecimal.ONE, new SimilarArticle(secondOtherUserArticle), BigDecimal.TEN), output);
     }
 }

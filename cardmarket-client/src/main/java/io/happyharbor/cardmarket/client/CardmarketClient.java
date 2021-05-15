@@ -64,6 +64,34 @@ public class CardmarketClient {
         return sendPutRequest(Collections.emptyMap(), endpoint, typeReference, payload);
     }
 
+    public <T, U> CompletableFuture<T> sendPostRequest(final Map<String, String> queryMap,
+                                                      final String endpoint,
+                                                      final TypeReference<T> typeReference,
+                                                      final U payload) {
+        HttpRequest request = generatePostRequest(queryMap, endpoint, payload);
+
+        return sendRequest(request, typeReference);
+    }
+
+    public <T, U> CompletableFuture<T> sendPostRequest(final String endpoint, final TypeReference<T> typeReference,
+                                                      final U payload) {
+        return sendPostRequest(Collections.emptyMap(), endpoint, typeReference, payload);
+    }
+
+    public <T, U> CompletableFuture<T> sendDeleteRequest(final Map<String, String> queryMap,
+                                                       final String endpoint,
+                                                       final TypeReference<T> typeReference,
+                                                       final U payload) {
+        HttpRequest request = generateDeleteRequest(queryMap, endpoint, payload);
+
+        return sendRequest(request, typeReference);
+    }
+
+    public <T, U> CompletableFuture<T> sendDeleteRequest(final String endpoint, final TypeReference<T> typeReference,
+                                                       final U payload) {
+        return sendDeleteRequest(Collections.emptyMap(), endpoint, typeReference, payload);
+    }
+
     private XmlMapper xmlMapper() {
         val mapper = new XmlMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
@@ -74,28 +102,52 @@ public class CardmarketClient {
 
         final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "GET");
 
-        return HttpRequest.newBuilder()
-                .uri(URI.create(urlAuthHeader.getLeft()))
-                .timeout(Duration.ofMinutes(1))
-                .headers("Authorization", "OAuth " + urlAuthHeader.getRight())
+        return httpBuilder(urlAuthHeader)
                 .GET()
                 .build();
     }
 
     @SneakyThrows
-    private <T> HttpRequest generatePutRequest(final Map<String, String> queryMap, final String endpoint,
-                                               final T payload) {
+    private <T> HttpRequest generatePutRequest(final Map<String, String> queryMap, final String endpoint, final T payload) {
 
         final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "PUT");
 
         val xml = xmlMapper.writeValueAsString(payload);
 
+        return httpBuilder(urlAuthHeader)
+                .PUT(HttpRequest.BodyPublishers.ofString(xml))
+                .build();
+    }
+
+    @SneakyThrows
+    private <T> HttpRequest generatePostRequest(final Map<String, String> queryMap, final String endpoint, final T payload) {
+
+        final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "POST");
+
+        val xml = xmlMapper.writeValueAsString(payload);
+
+        return httpBuilder(urlAuthHeader)
+                .POST(HttpRequest.BodyPublishers.ofString(xml))
+                .build();
+    }
+
+    @SneakyThrows
+    private <T> HttpRequest generateDeleteRequest(final Map<String, String> queryMap, final String endpoint, final T payload) {
+
+        final Pair<String, String> urlAuthHeader = generateHeader(queryMap, endpoint, "DELETE");
+
+        val xml = xmlMapper.writeValueAsString(payload);
+
+        return httpBuilder(urlAuthHeader)
+                .method("DELETE", HttpRequest.BodyPublishers.ofString(xml))
+                .build();
+    }
+
+    private HttpRequest.Builder httpBuilder(final Pair<String, String> urlAuthHeader) {
         return HttpRequest.newBuilder()
                 .uri(URI.create(urlAuthHeader.getLeft()))
                 .timeout(Duration.ofMinutes(1))
-                .headers("Authorization", "OAuth " + urlAuthHeader.getRight())
-                .PUT(HttpRequest.BodyPublishers.ofString(xml))
-                .build();
+                .headers("Authorization", "OAuth " + urlAuthHeader.getRight());
     }
 
     @SneakyThrows

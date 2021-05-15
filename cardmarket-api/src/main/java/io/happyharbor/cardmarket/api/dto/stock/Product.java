@@ -1,14 +1,13 @@
 package io.happyharbor.cardmarket.api.dto.stock;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.Value;
 
 @Value
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
     @JsonProperty("idGame")
     Integer gameId;

@@ -36,8 +36,8 @@
     <appender-ref ref="Console" />
 </root>
 
-<!-- LOG "io.happyharbor.cardmarket*" at TRACE level -->
-<logger name="io.happyharbor.cardmarket" level="trace" additivity="false">
+<!-- LOG "io.happyharbor.cardmarket*" at DEBUG level -->
+<logger name="io.happyharbor.cardmarket" level="debug" additivity="false">
     <appender-ref ref="RollingFile" />
     <appender-ref ref="Console" />
 </logger>

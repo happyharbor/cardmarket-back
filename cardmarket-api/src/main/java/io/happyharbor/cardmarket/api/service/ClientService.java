@@ -1,13 +1,11 @@
 package io.happyharbor.cardmarket.api.service;
 
-import io.happyharbor.cardmarket.api.dto.Account;
+import io.happyharbor.cardmarket.api.dto.account.Account;
 import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
-import io.happyharbor.cardmarket.api.dto.stock.ChangeStockQuantityArticle;
-import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
-import io.happyharbor.cardmarket.api.dto.stock.NotUpdatedArticle;
-import io.happyharbor.cardmarket.api.helper.GroupedArticle;
+import io.happyharbor.cardmarket.api.dto.stock.*;
+import io.happyharbor.cardmarket.api.helper.SimilarArticle;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,11 +15,9 @@ import java.util.concurrent.CompletableFuture;
 public interface ClientService {
     CompletableFuture<Account> getAccountInfo();
 
-    CompletableFuture<Map<GroupedArticle, BigDecimal>> getUserArticles(final String userId);
+    CompletableFuture<Map<SimilarArticle, BigDecimal>> getUserArticles(final String userId);
 
     CompletableFuture<List<MyArticle>> getStock();
-
-    CompletableFuture<List<NotUpdatedArticle>> updateArticles(List<MyArticle> otherUserArticles);
 
     CompletableFuture<List<Order>> getOrdersBy(final FilteredOrdersRequest request);
 
@@ -30,4 +26,12 @@ public interface ClientService {
     CompletableFuture<List<MyArticle>> increaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles);
 
     CompletableFuture<Void> decreaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles);
+
+    CompletableFuture<List<NotUpdatedArticle>> updateArticles(List<MyArticle> otherUserArticles);
+
+    CompletableFuture<List<NotAddedArticle>> addArticles(final List<MyArticle> articles);
+
+    CompletableFuture<List<DeletedArticle>> deleteArticles(final List<MyArticle> articles);
+
+    CompletableFuture<Boolean> goOnVacation(final boolean onVacation);
 }
