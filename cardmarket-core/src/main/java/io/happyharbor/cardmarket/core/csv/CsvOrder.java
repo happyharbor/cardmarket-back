@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor(force = true, access = AccessLevel.PUBLIC)
 public class CsvOrder {
     @CsvBindByName
-    Integer orderId;
+    Integer orderNum;
     @CsvBindByName
     String name;
     @CsvBindByName
