@@ -1,10 +1,12 @@
 package io.happyharbor.cardmarket.login.api.enums;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 @RequiredArgsConstructor
+@Getter
 public enum Role implements GrantedAuthority {
   USER("user", "ROLE_USER"),
   ADMIN("admin", "ROLE_ADMIN");

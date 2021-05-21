@@ -33,7 +33,7 @@ public class UserController {
     return userService.signup(signupRequest);
   }
 
-  @GetMapping(value = "/me")
+  @GetMapping("/me")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
   public WhoAmIResponse whoAmI(final Principal principal) {
     return userService.whoAmI(principal.getName());

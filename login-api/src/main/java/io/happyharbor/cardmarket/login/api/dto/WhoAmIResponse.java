@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Value
@@ -12,4 +13,5 @@ public class WhoAmIResponse {
     UUID id;
     String username;
     LocalDateTime createdAt;
+    Set<String> roles;
 }
