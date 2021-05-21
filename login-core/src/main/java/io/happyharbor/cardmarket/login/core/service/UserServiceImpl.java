@@ -1,6 +1,7 @@
 package io.happyharbor.cardmarket.login.core.service;
 
 import io.happyharbor.cardmarket.login.api.dto.*;
+import io.happyharbor.cardmarket.login.api.enums.Role;
 import io.happyharbor.cardmarket.login.api.exception.UserNotFoundException;
 import io.happyharbor.cardmarket.login.api.exception.UsernameExistException;
 import io.happyharbor.cardmarket.login.api.service.UserService;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +63,7 @@ public class UserServiceImpl implements UserService {
                 .id(user.getId())
                 .createdAt(user.getCreateTs())
                 .username(username)
+                .roles(user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
                 .build();
     }
 }
