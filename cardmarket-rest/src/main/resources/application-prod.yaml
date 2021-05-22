@@ -8,3 +8,7 @@ security:
     token:
       expire-length: 18000
   allowed-origins: https://cardmarket.happyharbor.io
+
+server:
+  servlet:
+    context-path: /api
