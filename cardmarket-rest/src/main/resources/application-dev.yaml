@@ -7,3 +7,4 @@ security:
   jwt:
     token:
       expire-length: 180000
+  allowed-origins: http://localhost:3000
