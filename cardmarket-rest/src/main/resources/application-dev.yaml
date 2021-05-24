@@ -8,3 +8,6 @@ security:
     token:
       expire-length: 180000
   allowed-origins: http://localhost:3000
+
+schedule:
+  update-prices: 0 0 0 0 0 0
