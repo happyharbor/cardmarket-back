@@ -33,7 +33,7 @@ public class StockServiceImpl implements StockService {
 
     private static final long LOT_THRESHOLD = 4;
     private static final long MAX_LOTS = 5;
-    private static final BigDecimal LOT_INCREASE = new BigDecimal("1.1");
+    private static final BigDecimal LOT_INCREASE = new BigDecimal("1.2");
     private static final BigDecimal MIN_PRICE = new BigDecimal("0.05");
 
     public StockServiceImpl(final ClientService clientService,
