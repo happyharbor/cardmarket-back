@@ -14,4 +14,4 @@ server:
     context-path: /api
 
 schedule:
-  update-prices: 0 0 5 * * *
+  update-prices: 0 0 1 * * *
