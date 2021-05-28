@@ -1,7 +1,6 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/login-service
-    platform: postgres
     driverClassName: org.postgresql.Driver
   jpa:
     open-in-view: false
@@ -12,6 +11,9 @@ spring:
       jdbc.time_zone: UTC
   liquibase:
     change-log: classpath:/db/db.changelog-master.yaml
+  sql:
+    init:
+      platform: postgres
 server:
   port: 8081
   error:
