@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public SigninResponse signin(final SigninRequest signinRequest) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getUsername(), signinRequest.getPassword()));
-        val user = applicationUserRepository.findByUsername(signinRequest.getUsername())
-                .orElseThrow(() -> new UserNotFoundException(signinRequest.getUsername()));
+        val principal = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getUsername(), signinRequest.getPassword()));
+        val roles = principal.getAuthorities()
+                .stream()
+                .map(a -> new SimpleGrantedAuthority(a.getAuthority()))
+                .collect(Collectors.toSet());
         return SigninResponse.builder()
-                .token(jwtTokenProvider.createToken(signinRequest.getUsername(), user.getRoles()))
+                .token(jwtTokenProvider.createToken(signinRequest.getUsername(), roles))
                 .build();
     }
 
@@ -51,7 +54,7 @@ public class UserServiceImpl implements UserService {
                 .password(passwordEncoder.encode(signupRequest.getPassword()))
                 .build());
         return SignupResponse.builder()
-                .token(jwtTokenProvider.createToken(signupRequest.getUsername(), Collections.singleton(signupRequest.getRole())))
+                .token(jwtTokenProvider.createToken(signupRequest.getUsername(), Collections.singleton(new SimpleGrantedAuthority(signupRequest.getRole().getGrantedAuthorityName()))))
                 .build();
     }
 

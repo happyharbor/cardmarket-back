@@ -40,10 +40,10 @@ public class JwtTokenProvider {
     this.secretKey = jwtTokenProperties.getSecretKey();
   }
 
-  public String createToken(String username, Set<Role> roles) {
+  public String createToken(String username, Set<SimpleGrantedAuthority> roles) {
 
     val claims = Jwts.claims().setSubject(username);
-    claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).collect(Collectors.toList()));
+    claims.put("auth", roles);
 
     val now = LocalDateTime.now();
     val validity = now.plusSeconds(jwtTokenProperties.getExpireLength());
