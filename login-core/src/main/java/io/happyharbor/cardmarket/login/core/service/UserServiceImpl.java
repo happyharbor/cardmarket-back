@@ -9,6 +9,7 @@ import io.happyharbor.cardmarket.login.core.entity.ApplicationUser;
 import io.happyharbor.cardmarket.login.core.repository.ApplicationUserRepository;
 import io.happyharbor.cardmarket.login.core.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -30,38 +32,43 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public SigninResponse signin(final SigninRequest signinRequest) {
-        val principal = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getUsername(), signinRequest.getPassword()));
+    public SigninResponse login(final LoginRequest loginRequest) {
+        log.debug("Trying to authenticate user: {}", loginRequest);
+        val principal = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         val roles = principal.getAuthorities()
                 .stream()
                 .map(a -> new SimpleGrantedAuthority(a.getAuthority()))
                 .collect(Collectors.toSet());
+        log.info("User: {} was authenticated successfully", loginRequest);
         return SigninResponse.builder()
-                .token(jwtTokenProvider.createToken(signinRequest.getUsername(), roles))
+                .token(jwtTokenProvider.createToken(loginRequest.getUsername(), roles))
                 .build();
     }
 
     @Override
-    public SignupResponse signup(final SignupRequest signupRequest) {
-
-        if (applicationUserRepository.existsByUsername(signupRequest.getUsername())) {
-            throw new UsernameExistException(signupRequest.getUsername());
+    public SignupResponse register(final RegisterRequest registerRequest) {
+        log.debug("Trying to register user {}", registerRequest);
+        if (applicationUserRepository.existsByUsername(registerRequest.getUsername())) {
+            throw new UsernameExistException(registerRequest.getUsername());
         }
 
         applicationUserRepository.save(ApplicationUser.builder()
-                .roles(Collections.singleton(signupRequest.getRole()))
-                .username(signupRequest.getUsername())
-                .password(passwordEncoder.encode(signupRequest.getPassword()))
+                .roles(Collections.singleton(registerRequest.getRole()))
+                .username(registerRequest.getUsername())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .build());
+        log.info("User {} was registered successfully", registerRequest);
         return SignupResponse.builder()
-                .token(jwtTokenProvider.createToken(signupRequest.getUsername(), Collections.singleton(new SimpleGrantedAuthority(signupRequest.getRole().getGrantedAuthorityName()))))
+                .token(jwtTokenProvider.createToken(registerRequest.getUsername(), Collections.singleton(new SimpleGrantedAuthority(registerRequest.getRole().getGrantedAuthorityName()))))
                 .build();
     }
 
     @Override
     public WhoAmIResponse whoAmI(final String username) {
+        log.debug("Asking who is user {}", username);
         val user = applicationUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
+        log.info("Asked successfully about {}", user);
         return WhoAmIResponse.builder()
                 .id(user.getId())
                 .createdAt(user.getCreateTs())

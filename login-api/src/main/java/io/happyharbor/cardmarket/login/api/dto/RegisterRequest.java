@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class SignupRequest {
+public class RegisterRequest {
     @NotBlank(message = "Username cannot be empty")
     String username;
 
@@ -25,4 +25,9 @@ public class SignupRequest {
 
     @NotNull
     Role role;
+
+    @ToString.Include(name = "password")
+    private String passwordMasker() {
+        return "****";
+    }
 }
