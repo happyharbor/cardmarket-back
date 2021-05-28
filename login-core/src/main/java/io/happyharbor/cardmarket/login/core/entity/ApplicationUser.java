@@ -52,5 +52,10 @@ public class ApplicationUser {
   public int hashCode() {
     return Objects.hash(username);
   }
+
+  @ToString.Include(name = "password")
+  private String passwordMasker() {
+    return "****";
+  }
 }
 

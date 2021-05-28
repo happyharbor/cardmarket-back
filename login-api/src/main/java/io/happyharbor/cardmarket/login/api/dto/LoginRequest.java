@@ -8,9 +8,14 @@ import javax.validation.constraints.NotBlank;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-public class SigninRequest {
+public class LoginRequest {
     @NotBlank(message = "Username cannot be empty")
     String username;
     @NotBlank(message = "Password cannot be empty")
     String password;
+
+    @ToString.Include(name = "password")
+    private String passwordMasker() {
+        return "****";
+    }
 }

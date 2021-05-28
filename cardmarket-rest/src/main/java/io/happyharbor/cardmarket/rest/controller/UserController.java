@@ -23,14 +23,14 @@ public class UserController {
   private final UserService userService;
 
   @PostMapping("/login")
-  public SigninResponse login(@RequestBody @Valid final SigninRequest signinRequest) {
-    return userService.signin(signinRequest);
+  public SigninResponse login(@RequestBody @Valid final LoginRequest loginRequest) {
+    return userService.login(loginRequest);
   }
 
   @PostMapping("/register")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  public SignupResponse signup(@RequestBody @Valid final SignupRequest signupRequest) {
-    return userService.signup(signupRequest);
+  public SignupResponse register(@RequestBody @Valid final RegisterRequest registerRequest) {
+    return userService.register(registerRequest);
   }
 
   @GetMapping("/me")
