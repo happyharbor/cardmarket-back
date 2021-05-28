@@ -1,5 +1,7 @@
 plugins {
     id 'java-platform'
+    id "com.github.ben-manes.versions" version '0.39.0'
+    id 'se.patrikerdes.use-latest-versions' version '0.2.16'
 }
 
 javaPlatform {
@@ -9,8 +11,8 @@ javaPlatform {
 dependencies {
     // platforms
     api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}"),
-            platform('org.apache.logging.log4j:log4j-bom:2.14.0'),
-            platform('com.fasterxml.jackson:jackson-bom:2.12.1')
+            platform('org.apache.logging.log4j:log4j-bom:2.14.1'),
+            platform('com.fasterxml.jackson:jackson-bom:2.12.3')
 
     constraints {
         api 'org.projectlombok:lombok:1.18.16',
