@@ -19,27 +19,15 @@ server:
   error:
     include-message: always
 
-security:
-  jwt:
-    token:
-      secret-key: 9hhryXSTsj5kx5srqeHuatufEFGrXfKVAhawMdUYRsRvLEbRa58AEvge2xGcjX59eSfBwCr
-
 springdoc:
   show-login-endpoint: true
 
 client:
   host: https://api.cardmarket.com/ws/v2.0/output.json/
-  credentials:
-    app-token: 11EJnS1zFECKcIs0
-    app-secret: n0sx8sCV3uYeeLcTmMIddWdEUS1KzK6E
-    access-token: 2DhWwfvZt274xvm3X9CA5cZG2ZpwZPtp
-    access-token-secret: 7RI93bdmytqIekr7OlOXvQOTo6QzMO2Y
 
   oauth:
     signature: HMAC-SHA1
     version: 1.0
-
-power-users: Arcana-Trieste, Bazaarofmagic, BB-Spiele, CARAB, CardsMania, cernyrytir, DonMTG, DRAGONCT, Dunkler-Herrscher, Eurekagames, FKTRD, Galactus-Roma, Games-Island, Goat-enterprise, Hobby-Games, HiveGames, Itaca, JK-Entertainment, karmacrow, Legacytcg, MagicBarcelona, Magicdealer-patte-de, magictime-it, MagicTradeHouseNo1, Manamaze, Mazvigosl, MTG-AGORA, Mtgspot, MTGWARHAMMER, NobleGarden, Olli-Baba, OutpostBrussels, Outpostgamecenter, Rarehuntershop, RetroMagic, SeventhCity, TEMPEST-STORE, ThreeForOne-AT, willybizarre, WizardshopCz
 
 price:
   prices-to-keep: 2
