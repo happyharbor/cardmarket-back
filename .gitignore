@@ -21,3 +21,7 @@ power-users-articles/*.csv
 
 ### Liquibase ###
 db.changelog-diff.yaml
+
+### Secrets ###
+application-secrets.yaml
+application-prod.yaml
