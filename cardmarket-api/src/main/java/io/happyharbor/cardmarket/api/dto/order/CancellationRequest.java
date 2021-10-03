@@ -11,4 +11,6 @@ import java.time.LocalDateTime;
 public class CancellationRequest {
     LocalDateTime date;
     String reason;
+    Boolean rejected;
+    String rejectAnswer;
 }

@@ -19,7 +19,6 @@ public class ProductDetailed {
     Integer countReprints;
     String enName;
     String locName;
-    @Singular
     @JsonProperty("localization")
     List<Localization> localizations;
     String website;
