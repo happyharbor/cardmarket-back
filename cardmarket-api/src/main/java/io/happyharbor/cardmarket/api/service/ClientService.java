@@ -21,6 +21,8 @@ public interface ClientService {
 
     CompletableFuture<List<Order>> getOrdersBy(final FilteredOrdersRequest request);
 
+    CompletableFuture<List<Order>> getOrdersByMax1YearBack(final FilteredOrdersRequest request);
+
     CompletableFuture<ProductDetailed> getProductsDetails(Long productId);
 
     CompletableFuture<List<MyArticle>> increaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles);

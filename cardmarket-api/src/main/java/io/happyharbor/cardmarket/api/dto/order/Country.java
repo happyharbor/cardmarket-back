@@ -257,7 +257,8 @@ public enum Country {
     YEMEN("Yemen", "YE", "YEM", 887),
     ZAMBIA("Zambia", "ZM", "ZMB", 894),
     ZIMBABWE("Zimbabwe", "ZW", "ZWE", 716),
-    ALAND_ISLANDS("Åland Islands", "AX", "ALA", 248);
+    ALAND_ISLANDS("Åland Islands", "AX", "ALA", 248),
+    UNKNOWN("", "", "", 1000);
 
     private final String name;
     @JsonValue
