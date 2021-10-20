@@ -8,4 +8,5 @@ import lombok.*;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class CancellationRequests {
     CancellationRequestExtended cancellationRequestSeller;
+    CancellationRequestBuyer cancellationRequestBuyer;
 }

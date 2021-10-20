@@ -8,12 +8,13 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum OrderState {
 
-    BOUGHT("bought", 1),
+    UNPAID("bought", 1),
     PAID("paid", 2),
     SENT("sent", 4),
-    RECEIVED("received", 8),
-    LOST("lost", 32),
-    CANCELLED("cancelled", 128);
+    ARRIVED("received", 8),
+    NOT_ARRIVED("lost", 32),
+    CANCELLED("cancelled", 128),
+    EVALUATED("evaluated", 1000);
 
     @JsonValue
     private final String name;

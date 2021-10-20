@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Order {
@@ -34,4 +34,5 @@ public class Order {
     String currencyCode;
     CancellationRequest cancellationRequest;
     CancellationRequests cancellationRequests;
+    Evaluation evaluation;
 }

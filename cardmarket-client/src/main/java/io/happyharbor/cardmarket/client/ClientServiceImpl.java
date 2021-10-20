@@ -1,6 +1,7 @@
 package io.happyharbor.cardmarket.client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import io.happyharbor.cardmarket.api.configuration.DateProvider;
 import io.happyharbor.cardmarket.api.dto.account.Account;
 import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
@@ -29,12 +30,15 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class ClientServiceImpl implements ClientService {
     private static final int MAX_STOCK_ARTICLES = 100;
+    private static final int MAX_ORDERS = 100;
     private static final int STARTING_STOCK_INDEX = 1;
+    private static final int STARTING_ORDER_INDEX = 1;
     private static final int MAX_OTHER_USERS_ARTICLES = 1000;
     private static final int STARTING_OTHER_USERS_INDEX = 0;
     public static final String STOCK_ENDPOINT = "stock";
 
     private final CardmarketClient client;
+    private final DateProvider dateProvider;
 
     @Override
     public CompletableFuture<Account> getAccountInfo() {
@@ -150,9 +154,12 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public CompletableFuture<List<Order>> getOrdersBy(final FilteredOrdersRequest request) {
-        return client.sendGetRequest(String.format("orders/%s/%s", request.getActor().getName(), request.getState().getName()),
-                new TypeReference<GetFilterOrdersResponse>() {})
-                .thenApply(GetFilterOrdersResponse::getOrders);
+        return CompletableFuture.completedFuture(getOrdersRecursive(request.toBuilder().start(STARTING_ORDER_INDEX).build()));
+    }
+
+    @Override
+    public CompletableFuture<List<Order>> getOrdersByMax1YearBack(final FilteredOrdersRequest request) {
+        return CompletableFuture.completedFuture(getOrdersRecursiveMax1YearBack(request.toBuilder().start(STARTING_ORDER_INDEX).build()));
     }
 
     @Override
@@ -206,5 +213,43 @@ public class ClientServiceImpl implements ClientService {
             articles.addAll(getStockRecursive(start + MAX_STOCK_ARTICLES));
         }
         return articles;
+    }
+
+    private List<Order> getOrdersRecursive(final FilteredOrdersRequest request) {
+        val orders = client.sendGetRequest(String.format("orders/%s/%s/%s", request.getActor().getName(),
+                                                                     request.getState().getName(), request.getStart()),
+                                                       new TypeReference<GetFilterOrdersResponse>() {})
+                                       .join()
+                                       .getOrders();
+
+        if (orders != null && orders.size() == MAX_ORDERS) {
+            final FilteredOrdersRequest newRequest = request.toBuilder()
+                    .start(request.getStart() + MAX_ORDERS)
+                    .build();
+            orders.addAll(getOrdersRecursive(newRequest));
+        }
+
+        return orders;
+    }
+
+    private List<Order> getOrdersRecursiveMax1YearBack(final FilteredOrdersRequest request) {
+        val orders = client.sendGetRequest(String.format("orders/%s/%s/%s", request.getActor().getName(),
+                                                                     request.getState().getName(), request.getStart()),
+                                                       new TypeReference<GetFilterOrdersResponse>() {})
+                                       .join()
+                                       .getOrders();
+
+        if (orders == null || orders.size() < MAX_ORDERS) {
+            return orders;
+        }
+
+        orders.sort(Comparator.comparing(order -> order.getState().getDateSent(), Comparator.reverseOrder()));
+
+        final boolean isWithinTwoYears = !orders.get(0).getState().getDateSent().isBefore(dateProvider.provideDateTime().minusYears(1));
+        if (isWithinTwoYears) {
+            orders.addAll(getOrdersRecursiveMax1YearBack(request.toBuilder().start(request.getStart() + MAX_ORDERS).build()));
+        }
+
+        return orders;
     }
 }

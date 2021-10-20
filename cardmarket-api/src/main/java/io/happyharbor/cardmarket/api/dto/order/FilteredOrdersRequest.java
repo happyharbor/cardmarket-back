@@ -3,7 +3,7 @@ package io.happyharbor.cardmarket.api.dto.order;
 import lombok.*;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class FilteredOrdersRequest {
