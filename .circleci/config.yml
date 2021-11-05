@@ -1,0 +1,36 @@
+executors:
+  openjdk-executor:
+    docker:
+      - image: 'cimg/openjdk:17.0.0'
+orbs:
+  gradle: circleci/gradle@2.2.0
+version: 2.1
+
+jobs:
+  build_test:
+    executor:
+      openjdk-executor
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run:
+          name: Run tests and create Jacoco Report
+          command: ./gradlew jacocoTestReport
+
+      - run:
+          name: Analyze on SonarCloud
+          command: ./gradlew sonarqube
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/*
+
+workflows:
+  test_and_publish:
+    jobs:
+      - build_test
+
