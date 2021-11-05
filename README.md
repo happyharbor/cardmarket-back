@@ -35,4 +35,8 @@ power-users: list of users that you would like to scan
 INSERT INTO public.application_user (id, create_ts, modify_ts, password, username) VALUES ('71c91ef7-edbd-4067-bd32-2bb27a3165ab', '2021-10-07 07:07:45.172916', '2021-10-07 07:07:45.172947', '$2a$12$sFaEA3yUCDkbLworGm6nMu4MSk6GCyBzJkJRL8s7604Vqz/hxtjNO', 'admin');
 INSERT INTO public.application_user_roles (application_user_id, roles) VALUES ('71c91ef7-edbd-4067-bd32-2bb27a3165ab', 1);
 ```
-6. Follow the relative instructions of [cardmarket front](https://github.com/happyharbor/cardmarket_front)
+6. Follow the relevant instructions of [cardmarket front](https://github.com/happyharbor/cardmarket_front)
+
+## Support
+This project is being supported by 
+<img src="https://iconape.com/wp-content/png_logo_vector/cib-jetbrains.png" alt="jetbrains logo" width="20%"/>
