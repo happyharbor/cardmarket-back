@@ -1,4 +1,9 @@
 # Cardmarket backend
+[![CircleCI](https://circleci.com/gh/happyharbor/cardmarket-back.svg?style=shield)](https://circleci.com/gh/circleci/circleci-docs)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_cardmarket-back&metric=coverage)](https://sonarcloud.io/summary/new_code?id=happyharbor_cardmarket-back)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_cardmarket-back&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=happyharbor_cardmarket-back)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_cardmarket-back&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=happyharbor_cardmarket-back)
+[![GitHub license](https://img.shields.io/github/license/happyharbor/cardmarket_back)](https://github.com/happyharbor/cardmarket_back/blob/master/LICENCE)
 
 ## Service Oriented Architecture
 Each module should have a specific role. Login modules are handling the login,
