@@ -6,7 +6,7 @@ spring:
 security:
   jwt:
     token:
-      expire-length: 180000
+      expire-length: 1800000
   allowed-origins: http://localhost:3000
 
 schedule:
