@@ -40,6 +40,7 @@ public class CardmarketClient {
     private final OauthProperties oauthProperties;
     private final HttpClient client;
     private final XmlMapper xmlMapper = xmlMapper();
+    private final Random random;
 
     public <T> CompletableFuture<T> sendGetRequest(final Map<String, String> queryMap, final String endpoint, final TypeReference<T> typeReference) {
         HttpRequest request = generateGetRequest(queryMap, endpoint);
@@ -157,7 +158,7 @@ public class CardmarketClient {
         String url = clientProperties.getHost() + endpoint;
         headers.put("oauth_consumer_key", credentialProperties.getAppToken());
         headers.put("oauth_token", credentialProperties.getAccessToken());
-        headers.put("oauth_nonce", Double.toString(new Random().nextDouble()));
+        headers.put("oauth_nonce", Double.toString(random.nextDouble()));
         headers.put("oauth_timestamp", Long.toString(System.currentTimeMillis()));
         headers.put("oauth_signature_method", oauthProperties.getSignature());
         headers.put("oauth_version", oauthProperties.getVersion());
