@@ -1,4 +1,4 @@
-rootProject.name = 'cardmarket'
+rootProject.name = 'cardmarket-back'
 include 'cardmarket-platform'
 include 'cardmarket-api'
 include 'cardmarket-core'
