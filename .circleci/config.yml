@@ -16,6 +16,20 @@ jobs:
     steps:
       - checkout
 
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: ./gradlew dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
       - run:
           name: Run tests and create Jacoco Report
           command: ./gradlew jacocoTestReport
@@ -29,8 +43,26 @@ jobs:
           paths:
             - build/*
 
+  no_master:
+    executor:
+      openjdk-executor
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: repo/
+
+
 workflows:
   test_and_publish:
     jobs:
       - build_test
-
+      - no_master:
+          requires:
+            - build_test
+          filters:
+            branches:
+              ignore:
+                - master
