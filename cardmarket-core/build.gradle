@@ -26,7 +26,8 @@ dependencies {
     implementation project(':cardmarket-api'),
             project(':cardmarket-client')
 
-    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter',
+            'com.opencsv:opencsv'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 

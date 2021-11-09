@@ -21,9 +21,15 @@ jar {
 
 dependencies {
     implementation platform(project(':cardmarket-platform'))
-    annotationProcessor platform(project(':cardmarket-platform'))
+    annotationProcessor platform(project(':cardmarket-platform')),
+            'org.springframework.boot:spring-boot-configuration-processor'
 
-    implementation project(':cardmarket-api')
+    implementation project(':cardmarket-api'),
+            'com.fasterxml.jackson.core:jackson-core',
+            'com.fasterxml.jackson.core:jackson-databind',
+            'org.apache.commons:commons-lang3',
+            'net.jodah:failsafe',
+            'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 
     implementation 'org.springframework.boot:spring-boot-starter'
     compileOnly 'org.projectlombok:lombok'

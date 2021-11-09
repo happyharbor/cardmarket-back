@@ -1,6 +1,28 @@
+server:
+  port: 8081
+
 logging:
   file:
-    name: logs/cardmarket.log
+    name: ../logs/cardmarket.log
   level:
     root: info
     io.happyharbor: debug
+
+client:
+  host: https://api.cardmarket.com/ws/v2.0/output.json/
+  credentials:
+    app-token: 11EJnS1zFECKcIs0
+    app-secret: n0sx8sCV3uYeeLcTmMIddWdEUS1KzK6E
+    access-token: 2DhWwfvZt274xvm3X9CA5cZG2ZpwZPtp
+    access-token-secret: 7RI93bdmytqIekr7OlOXvQOTo6QzMO2Y
+
+  oauth:
+    signature: HMAC-SHA1
+    version: 1.0
+
+power-users: Arcana-Trieste, Bazaarofmagic, BB-Spiele, CARAB, CardsMania, cernyrytir, DonMTG, DRAGONCT, Dunkler-Herrscher, Eurekagames, FKTRD, Galactus-Roma, Games-Island, Goat-enterprise, Hobby-Games, HiveGames, Itaca, JK-Entertainment, karmacrow, MagicBarcelona, MagicBazar, Magicdealer-patte-de, magictime-it, MagicTradeHouseNo1, Manamaze, Mazvigosl, MTG-AGORA, Mtgspot, MTGWARHAMMER, NobleGarden, Olli-Baba, OutpostBrussels, Outpostgamecenter, Rarehuntershop, RetroMagic, SeventhCity, TEMPEST-STORE, ThreeForOne-AT, willybizarre, WizardshopCz
+
+price:
+  percentage-of-powersellers: 0.3
+  change-price-threshold: 0.2
+  too-high-price-threshold: 2.0
