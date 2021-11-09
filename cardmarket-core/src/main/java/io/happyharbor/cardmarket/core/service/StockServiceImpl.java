@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.core.service;
 
-import io.happyharbor.cardmarket.api.dto.MyArticle;
+import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
 import io.happyharbor.cardmarket.api.helper.GroupedArticle;
 import io.happyharbor.cardmarket.api.service.ClientService;
 import io.happyharbor.cardmarket.api.service.StockService;
@@ -49,7 +49,21 @@ public class StockServiceImpl implements StockService {
         powerUsers.forEach(user -> {
             log.debug("Fetching articles for user {}...", user);
             Map<GroupedArticle, BigDecimal> userArticles = clientService.getUserArticles(user).join();
-            csvHelper.saveToCsv(user, userArticles);
+            final List<CsvArticle> csvArticles = userArticles.entrySet().stream().map(e -> CsvArticle.builder()
+                    .productId(e.getKey().getProductId())
+                    .languageId(e.getKey().getLanguage().getLanguageId())
+                    .languageName(e.getKey().getLanguage().getLanguageName())
+                    .currencyId(e.getKey().getCurrencyId())
+                    .isFoil(e.getKey().getIsFoil())
+                    .isAltered(e.getKey().getIsAltered())
+                    .isPlayset(e.getKey().getIsPlayset())
+                    .isSigned(e.getKey().getIsSigned())
+                    .isFirstEd(e.getKey().getIsFirstEd())
+                    .price(e.getValue())
+                    .build())
+                    .collect(toList());
+            final String filePath = String.format("%s.csv", user);
+            csvHelper.saveToCsv(filePath, csvArticles);
             userArticles.forEach((k, v) -> articles.computeIfAbsent(k, a -> new LinkedList<>()).add(v));
         });
 

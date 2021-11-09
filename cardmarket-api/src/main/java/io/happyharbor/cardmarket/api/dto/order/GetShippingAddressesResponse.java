@@ -1,6 +1,5 @@
-package io.happyharbor.cardmarket.client.dto;
+package io.happyharbor.cardmarket.api.dto.order;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.happyharbor.cardmarket.api.dto.Link;
 import io.happyharbor.cardmarket.api.dto.stock.OtherUserArticle;
@@ -12,8 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class GetOtherUserArticleResponse {
+public class GetShippingAddressesResponse {
     @JsonProperty("article")
     List<OtherUserArticle> articles;
     List<Link> links;

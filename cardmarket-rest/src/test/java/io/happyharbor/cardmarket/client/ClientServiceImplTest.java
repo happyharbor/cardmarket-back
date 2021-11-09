@@ -1,8 +1,8 @@
 package io.happyharbor.cardmarket.client;
 
-import io.happyharbor.cardmarket.api.dto.OtherUserArticle;
-import io.happyharbor.cardmarket.api.dto.Language;
-import io.happyharbor.cardmarket.api.dto.Price;
+import io.happyharbor.cardmarket.api.dto.stock.Language;
+import io.happyharbor.cardmarket.api.dto.stock.OtherUserArticle;
+import io.happyharbor.cardmarket.api.dto.stock.Price;
 import io.happyharbor.cardmarket.api.helper.GroupedArticle;
 import org.junit.jupiter.api.Test;
 

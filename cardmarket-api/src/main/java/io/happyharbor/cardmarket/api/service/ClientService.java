@@ -1,8 +1,10 @@
 package io.happyharbor.cardmarket.api.service;
 
 import io.happyharbor.cardmarket.api.dto.Account;
-import io.happyharbor.cardmarket.api.dto.MyArticle;
-import io.happyharbor.cardmarket.api.dto.NotUpdatedArticle;
+import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
+import io.happyharbor.cardmarket.api.dto.order.Order;
+import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
+import io.happyharbor.cardmarket.api.dto.stock.NotUpdatedArticle;
 import io.happyharbor.cardmarket.api.helper.GroupedArticle;
 
 import java.math.BigDecimal;
@@ -18,4 +20,6 @@ public interface ClientService {
     CompletableFuture<List<MyArticle>> getStock();
 
     CompletableFuture<List<NotUpdatedArticle>> updateArticles(List<MyArticle> otherUserArticles);
+
+    CompletableFuture<List<Order>> getOrdersBy(final FilteredOrdersRequest request);
 }

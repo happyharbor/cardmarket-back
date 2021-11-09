@@ -1,9 +1,6 @@
 package io.happyharbor.cardmarket.core.csv;
 
-import com.opencsv.bean.CsvToBeanBuilder;
-import com.opencsv.bean.StatefulBeanToCsv;
-import com.opencsv.bean.StatefulBeanToCsvBuilder;
-import io.happyharbor.cardmarket.api.helper.GroupedArticle;
+import com.opencsv.bean.*;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.core.io.Resource;
@@ -12,10 +9,8 @@ import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -44,23 +39,22 @@ public class CsvHelper {
     }
 
     @SneakyThrows
-    public void saveToCsv(String user, Map<GroupedArticle, BigDecimal> userArticles) {
+    public <T> void saveToCsv(final String filePath, final List<T> beans) {
 
-        Writer writer = new FileWriter(String.format("%s.csv", user));
-        StatefulBeanToCsv<Object> beanToCsv = new StatefulBeanToCsvBuilder<>(writer).build();
-        beanToCsv.write(userArticles.entrySet().stream().map(e -> CsvArticle.builder()
-                .productId(e.getKey().getProductId())
-                .languageId(e.getKey().getLanguage().getLanguageId())
-                .languageName(e.getKey().getLanguage().getLanguageName())
-                .currencyId(e.getKey().getCurrencyId())
-                .isFoil(e.getKey().getIsFoil())
-                .isAltered(e.getKey().getIsAltered())
-                .isPlayset(e.getKey().getIsPlayset())
-                .isSigned(e.getKey().getIsSigned())
-                .isFirstEd(e.getKey().getIsFirstEd())
-                .price(e.getValue())
-                .build())
-                .collect(Collectors.toList()));
+        Writer writer = new FileWriter(filePath);
+        StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder<T>(writer).build();
+        beanToCsv.write(beans);
         writer.close();
+    }
+
+    @SneakyThrows
+    public <T> OutputStream writeCsv(final List<T> beans) {
+        OutputStream outputStream = new ByteArrayOutputStream();
+        Writer writer = new OutputStreamWriter(outputStream);
+        final StatefulBeanToCsv<T> beanToCsv = new StatefulBeanToCsvBuilder<T>(writer)
+                .build();
+        beanToCsv.write(beans);
+        writer.close();
+        return outputStream;
     }
 }

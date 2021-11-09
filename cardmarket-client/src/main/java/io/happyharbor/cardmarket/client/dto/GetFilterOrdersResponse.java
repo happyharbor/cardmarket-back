@@ -1,8 +1,8 @@
 package io.happyharbor.cardmarket.client.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
-import io.happyharbor.cardmarket.api.dto.stock.NotUpdatedArticle;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.happyharbor.cardmarket.api.dto.order.Order;
 import lombok.*;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateArticleResponse {
-    List<MyArticle> updatedArticles;
-    List<NotUpdatedArticle> notUpdatedArticles;
+public class GetFilterOrdersResponse {
+    @JsonProperty("order")
+    List<Order> orders;
 }

@@ -1,4 +1,4 @@
-package io.happyharbor.cardmarket.api.dto;
+package io.happyharbor.cardmarket.api.dto.stock;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

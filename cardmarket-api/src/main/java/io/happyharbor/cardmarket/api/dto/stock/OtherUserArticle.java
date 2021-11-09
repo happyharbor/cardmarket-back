@@ -1,17 +1,18 @@
-package io.happyharbor.cardmarket.api.dto;
+package io.happyharbor.cardmarket.api.dto.stock;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Value
-@Builder(toBuilder = true)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MyArticle {
+public class OtherUserArticle {
     @JsonProperty("idArticle")
     Long id;
     @JsonProperty("idProduct")
@@ -24,7 +25,7 @@ public class MyArticle {
     String currencyCode;
     Long count;
     boolean inShoppingCart;
-    Product product;
+    List<Price> prices;
     String condition;
     Boolean isFoil;
     Boolean isSigned;
