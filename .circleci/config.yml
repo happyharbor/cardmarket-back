@@ -11,8 +11,6 @@ jobs:
     executor:
       openjdk-executor
 
-    working_directory: ~/repo
-
     steps:
       - checkout
 
@@ -28,9 +26,60 @@ jobs:
           root: .
           paths:
             - build/*
+            - cardmarket-api/build/*
+            - cardmarket-client/build/*
+            - cardmarket-core/build/*
+            - cardmarket-rest/build/*
+            - login-api/build/*
+            - login-core/build/*
+            - .gradle/*
+
+
+  deploy:
+    executor:
+      openjdk-executor
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "11:55:85:8e:fb:0f:2b:34:10:e1:e4:c7:ea:de:47:16"
+      - run:
+          name: Add host to known_hosts
+          command: |
+            echo $HOST_SIGNATURE >> ~/.ssh/known_hosts
+      - run:
+          name: Copy secrets
+          command: scp -P $SSH_PORT $SSH_USER@$SSH_HOST:~/cardmarket/*.yaml cardmarket-rest/src/main/resources/
+      - run:
+          name: Build projects
+          command: ./gradlew build
+      - run:
+          name: Copy jar
+          command: scp -P $SSH_PORT cardmarket-rest/build/libs/cardmarket-rest-0.0.1-SNAPSHOT.jar $SSH_USER@$SSH_HOST:~/cardmarket
+      - run:
+          name: Stop previous processes
+          command: ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "./cardmarket/kill_prev_process.sh"
+      - run:
+          name: Deploy Over SSH
+          command: |
+            ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "nohup /home/pi/.sdkman/candidates/java/current/bin/java -jar \
+            -Dliquibase.hub.apiKey=$LIQUIBASE_HUB_API_KEY \
+            -Dspring.profiles.active=prod,secrets \
+            cardmarket/cardmarket-rest-0.0.1-SNAPSHOT.jar \
+            > cardmarket/log.out 2> cardmarket/log.err < /dev/null &"
+
 
 workflows:
   test_and_publish:
     jobs:
       - build_test:
           context: SonarCloud
+      - deploy:
+          requires:
+            - build_test
+          filters:
+            branches:
+              only: master
