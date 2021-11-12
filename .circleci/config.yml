@@ -65,11 +65,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh -p $SSH_PORT $SSH_USER@$SSH_HOST "nohup /home/pi/.sdkman/candidates/java/current/bin/java -jar \
-            -Dliquibase.hub.apiKey=$LIQUIBASE_HUB_API_KEY \
-            -Dspring.profiles.active=prod,secrets \
-            cardmarket/cardmarket-rest-0.0.1-SNAPSHOT.jar \
-            > cardmarket/log.out 2> cardmarket/log.err < /dev/null &"
+            ssh -fn -p $SSH_PORT $SSH_USER@$SSH_HOST "./cardmarket/deploy_back.sh cardmarket-rest-0.0.1-SNAPSHOT.jar"
 
 
 workflows:
