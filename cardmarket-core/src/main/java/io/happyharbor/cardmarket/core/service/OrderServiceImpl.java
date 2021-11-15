@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -88,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
                             .build();
                     return order.toBuilder().state(stateDto).build();
                 })
-                .collect(Collectors.groupingBy(order -> order.getState().getDateSent()))
+                .collect(Collectors.groupingBy(order -> order.getState().getDateSent(), TreeMap::new, Collectors.toList()))
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getKey().isAfter(dateProvider.provideDateTime().minusYears(1)) &&

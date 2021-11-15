@@ -245,8 +245,8 @@ public class ClientServiceImpl implements ClientService {
 
         orders.sort(Comparator.comparing(order -> order.getState().getDateSent(), Comparator.reverseOrder()));
 
-        final boolean isWithinTwoYears = !orders.get(0).getState().getDateSent().isBefore(dateProvider.provideDateTime().minusYears(1));
-        if (isWithinTwoYears) {
+        final boolean isWithinOneYear = !orders.get(0).getState().getDateSent().isBefore(dateProvider.provideDateTime().minusYears(1));
+        if (isWithinOneYear) {
             orders.addAll(getOrdersRecursiveMax1YearBack(request.toBuilder().start(request.getStart() + MAX_ORDERS).build()));
         }
 
