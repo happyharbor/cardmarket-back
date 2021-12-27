@@ -1,5 +1,5 @@
 # Cardmarket backend
-[![CircleCI](https://circleci.com/gh/happyharbor/cardmarket-back.svg?style=shield)](https://circleci.com/gh/circleci/circleci-docs)
+[![CircleCI](https://circleci.com/gh/happyharbor/cardmarket-back.svg?style=shield)](https://circleci.com/gh/happyharbor/cardmarket-back/tree/master)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_cardmarket-back&metric=coverage)](https://sonarcloud.io/summary/new_code?id=happyharbor_cardmarket-back)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_cardmarket-back&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=happyharbor_cardmarket-back)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_cardmarket-back&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=happyharbor_cardmarket-back)
