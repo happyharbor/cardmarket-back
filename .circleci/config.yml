@@ -1,7 +1,7 @@
 executors:
   openjdk-executor:
     docker:
-      - image: 'cimg/openjdk:17.0.0'
+      - image: 'cimg/openjdk:17.0.2'
 orbs:
   gradle: circleci/gradle@2.2.0
 version: 2.1
