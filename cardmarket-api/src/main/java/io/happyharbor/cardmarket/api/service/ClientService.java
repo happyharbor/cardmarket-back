@@ -25,6 +25,8 @@ public interface ClientService {
 
     CompletableFuture<ProductDetailed> getProductsDetails(Long productId);
 
+    CompletableFuture<String> getProductList();
+
     CompletableFuture<List<MyArticle>> increaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles);
 
     CompletableFuture<Void> decreaseStockQuantity(final List<ChangeStockQuantityArticle> changeStockQuantityArticles);

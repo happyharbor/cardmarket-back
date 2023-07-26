@@ -106,7 +106,7 @@ public class ClientServiceImpl implements ClientService {
                     .getInsertedArticles()
                     .stream()
                     .filter(insertedArticle -> !insertedArticle.isSuccess())
-                    .collect(toList());
+                    .toList();
 
             notAddedArticles.addAll(innerNotAddedArticles);
             start += MAX_STOCK_ARTICLES;
@@ -134,7 +134,7 @@ public class ClientServiceImpl implements ClientService {
                     .getArticles()
                     .stream()
                     .filter(deletedArticle -> !deletedArticle.isSuccess())
-                    .collect(toList());
+                    .toList();
 
             notDeletedArticles.addAll(innerNotDeletedArticles);
             start += MAX_STOCK_ARTICLES;
@@ -167,6 +167,13 @@ public class ClientServiceImpl implements ClientService {
         return client.sendGetRequest("products/" + productId,
                 new TypeReference<GetProductResponse>() {})
                 .thenApply(GetProductResponse::getProduct);
+    }
+
+    @Override
+    public CompletableFuture<String> getProductList() {
+        return client.sendGetRequest("productlist",
+                        new TypeReference<GetProductListResponse>() {})
+                .thenApply(GetProductListResponse::getProductsfile);
     }
 
     @Override
