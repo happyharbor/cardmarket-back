@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.stock;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
 
 @Value
@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class ChangeStockQuantityArticle {
-    @JsonProperty("idArticle")
+    @JsonAlias("idArticle")
     Long id;
     Long count;
 }

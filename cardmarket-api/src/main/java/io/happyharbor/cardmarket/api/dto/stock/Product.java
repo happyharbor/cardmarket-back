@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.stock;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -9,7 +9,7 @@ import lombok.Value;
 @Value
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Product {
-    @JsonProperty("idGame")
+    @JsonAlias("idGame")
     Integer gameId;
     @ToString.Exclude
     String image;
@@ -17,7 +17,7 @@ public class Product {
     @ToString.Exclude
     String locName;
     String expansion;
-    @JsonProperty("nr")
+    @JsonAlias("nr")
     String collectorsNumber;
     @ToString.Exclude
     Integer expIcon;

@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.account;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Value;
@@ -15,7 +15,7 @@ public class MoneyDetails {
     BigDecimal bonusBalance;
     BigDecimal unpaidAmount;
     BigDecimal providerRechargeAmount;
-    @JsonProperty("idCurrency")
+    @JsonAlias("idCurrency")
     int currencyId;
     String currencyCode;
 }

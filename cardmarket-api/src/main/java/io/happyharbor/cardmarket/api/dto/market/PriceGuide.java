@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.market;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -10,18 +10,18 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class PriceGuide {
-    @JsonProperty("SELL")
+    @JsonAlias("SELL")
     BigDecimal sell;
-    @JsonProperty("LOW")
+    @JsonAlias("LOW")
     BigDecimal low;
-    @JsonProperty("LOWEX")
+    @JsonAlias("LOWEX")
     BigDecimal lowEx;
-    @JsonProperty("LOWFOIL")
+    @JsonAlias("LOWFOIL")
     BigDecimal lowFoil;
-    @JsonProperty("AVG")
+    @JsonAlias("AVG")
     BigDecimal avg;
-    @JsonProperty("TREND")
+    @JsonAlias("TREND")
     BigDecimal trend;
-    @JsonProperty("TRENDFOIL")
+    @JsonAlias("TRENDFOIL")
     BigDecimal trendFoil;
 }

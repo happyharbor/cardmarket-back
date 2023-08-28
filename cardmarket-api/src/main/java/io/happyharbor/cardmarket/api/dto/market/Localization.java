@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.market;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
 
 @Value
@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Localization {
     String name;
-    @JsonProperty("idLanguage")
+    @JsonAlias("idLanguage")
     Integer languageId;
     String languageName;
 }

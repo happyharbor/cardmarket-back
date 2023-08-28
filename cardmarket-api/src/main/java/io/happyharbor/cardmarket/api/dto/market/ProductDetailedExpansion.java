@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.market;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
 
 @Value
@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class ProductDetailedExpansion {
-    @JsonProperty("idExpansion")
+    @JsonAlias("idExpansion")
     Integer id;
     String enName;
     Integer expansionIcon;

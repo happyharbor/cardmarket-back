@@ -1,7 +1,7 @@
 package io.happyharbor.cardmarket.api.dto.market;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.util.List;
@@ -12,20 +12,20 @@ import java.util.List;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductDetailed {
-    @JsonProperty("idProduct")
+    @JsonAlias("idProduct")
     Integer id;
-    @JsonProperty("idMetaproduct")
+    @JsonAlias("idMetaproduct")
     Integer metaproductId;
     Integer countReprints;
     String enName;
     String locName;
-    @JsonProperty("localization")
+    @JsonAlias("localization")
     List<Localization> localizations;
     String website;
     String image;
     String gameName;
     String categoryName;
-    @JsonProperty("idGame")
+    @JsonAlias("idGame")
     Integer gameId;
     String number;
     String rarity;

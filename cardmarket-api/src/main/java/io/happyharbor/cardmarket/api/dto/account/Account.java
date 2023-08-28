@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.account;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import io.happyharbor.cardmarket.api.dto.order.Address;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Value
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Account {
-    @JsonProperty("idUser")
+    @JsonAlias("idUser")
     String userId;
     String username;
     int isCommercial;
@@ -32,7 +32,7 @@ public class Account {
     String vat;
     String legalInformation;
     LocalDateTime registerDate;
-    @JsonProperty("isActivated")
+    @JsonAlias("isActivated")
     boolean activated;
     BankAccount bankAccount;
     int articlesInShoppingCart;

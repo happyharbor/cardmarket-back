@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.order;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import io.happyharbor.cardmarket.api.dto.stock.MyArticle;
 import lombok.*;
 
@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class Order {
-    @JsonProperty("idOrder")
+    @JsonAlias("idOrder")
     Integer orderId;
     Boolean isBuyer;
     User seller;
@@ -25,11 +25,11 @@ public class Order {
     Address shippingAddress;
     String note;
     int articleCount;
-    @JsonProperty("article")
+    @JsonAlias("article")
     List<MyArticle> articles;
     BigDecimal articleValue;
     BigDecimal totalValue;
-    @JsonProperty("idCurrency")
+    @JsonAlias("idCurrency")
     Integer currencyId;
     String currencyCode;
     CancellationRequest cancellationRequest;

@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.order;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -10,14 +10,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class ShippingMethod {
-    @JsonProperty("idShippingMethod")
+    @JsonAlias("idShippingMethod")
     Integer shippingMethodId;
     String name;
     BigDecimal price;
-    @JsonProperty("idCurrency")
+    @JsonAlias("idCurrency")
     Integer currencyId;
     String currencyCode;
     Boolean isLetter;
-    @JsonProperty("isInsured")
+    @JsonAlias("isInsured")
     boolean isTracked;
 }

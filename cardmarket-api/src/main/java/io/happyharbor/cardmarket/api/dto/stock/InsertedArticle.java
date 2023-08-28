@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.stock;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Value;
@@ -9,9 +9,9 @@ import lombok.Value;
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class InsertedArticle {
     boolean success;
-    @JsonProperty("tried")
+    @JsonAlias("tried")
     NotAddedArticle notAddedArticle;
-    @JsonProperty("idArticle")
+    @JsonAlias("idArticle")
     MyArticle addedArticle;
     String error;
 }

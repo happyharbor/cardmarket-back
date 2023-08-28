@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.order;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Value;
@@ -14,6 +14,6 @@ public class Evaluation {
     int itemDescription;
     int packaging;
     String comment;
-    @JsonProperty("complaint")
+    @JsonAlias("complaint")
     List<String> complaints;
 }

@@ -1,6 +1,6 @@
 package io.happyharbor.cardmarket.api.dto.order;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(force = true, access = AccessLevel.PRIVATE)
 public class User {
-    @JsonProperty("idUser")
+    @JsonAlias("idUser")
     Integer userId;
     String username;
     Integer isCommercial;
