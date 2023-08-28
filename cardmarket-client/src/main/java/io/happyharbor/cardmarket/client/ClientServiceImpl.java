@@ -3,6 +3,7 @@ package io.happyharbor.cardmarket.client;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.happyharbor.cardmarket.api.configuration.DateProvider;
 import io.happyharbor.cardmarket.api.dto.account.Account;
+import io.happyharbor.cardmarket.api.dto.market.GetExpansionsRequest;
 import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
@@ -12,6 +13,8 @@ import io.happyharbor.cardmarket.api.service.ClientService;
 import io.happyharbor.cardmarket.client.dto.*;
 import io.happyharbor.cardmarket.client.dto.account.GetAccountResponse;
 import io.happyharbor.cardmarket.client.dto.account.GetVacationResponse;
+import io.happyharbor.cardmarket.api.dto.market.GetExpansionsResponse;
+import io.happyharbor.cardmarket.api.dto.market.GetGamesResponse;
 import io.happyharbor.cardmarket.client.dto.stock.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -258,5 +261,19 @@ public class ClientServiceImpl implements ClientService {
         }
 
         return orders;
+    }
+
+    /////////////////
+    /* Marketplace */
+    /////////////////
+
+    @Override
+    public CompletableFuture<GetGamesResponse> getGames() {
+        return client.sendGetRequest("games", new TypeReference<>() {});
+    }
+
+    @Override
+    public CompletableFuture<GetExpansionsResponse> getExpansionsBy(GetExpansionsRequest request) {
+        return client.sendGetRequest(String.format("games/%s/expansions", request.getGameId()), new TypeReference<>() {});
     }
 }

@@ -1,5 +1,8 @@
 package io.happyharbor.cardmarket.core.service;
 
+import io.happyharbor.cardmarket.api.dto.market.GetExpansionsRequest;
+import io.happyharbor.cardmarket.api.dto.market.GetExpansionsResponse;
+import io.happyharbor.cardmarket.api.dto.market.GetGamesResponse;
 import io.happyharbor.cardmarket.api.service.ClientService;
 import io.happyharbor.cardmarket.api.service.MarketplaceService;
 import lombok.RequiredArgsConstructor;
@@ -28,5 +31,15 @@ public class MarketPlaceServiceImpl implements MarketplaceService {
 
                     return Base64.getDecoder().decode(s.getBytes(StandardCharsets.UTF_8));
                 });
+    }
+
+    @Override
+    public CompletableFuture<GetGamesResponse> getGames() {
+        return clientService.getGames();
+    }
+
+    @Override
+    public CompletableFuture<GetExpansionsResponse> getExpansions(GetExpansionsRequest request) {
+        return clientService.getExpansionsBy(request);
     }
 }

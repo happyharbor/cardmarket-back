@@ -1,7 +1,7 @@
 package io.happyharbor.cardmarket.api.service;
 
 import io.happyharbor.cardmarket.api.dto.account.Account;
-import io.happyharbor.cardmarket.api.dto.market.ProductDetailed;
+import io.happyharbor.cardmarket.api.dto.market.*;
 import io.happyharbor.cardmarket.api.dto.order.FilteredOrdersRequest;
 import io.happyharbor.cardmarket.api.dto.order.Order;
 import io.happyharbor.cardmarket.api.dto.stock.*;
@@ -38,4 +38,12 @@ public interface ClientService {
     CompletableFuture<List<DeletedArticle>> deleteArticles(final List<MyArticle> articles);
 
     CompletableFuture<Boolean> goOnVacation(final boolean onVacation);
+
+
+    /////////////////
+    /* Marketplace */
+    /////////////////
+
+    CompletableFuture<GetGamesResponse> getGames();
+    CompletableFuture<GetExpansionsResponse> getExpansionsBy(GetExpansionsRequest request);
 }

@@ -29,7 +29,7 @@ public class ProductDetailed {
     Integer gameId;
     String number;
     String rarity;
-    Expansion expansion;
+    ProductDetailedExpansion expansion;
     PriceGuide priceGuide;
     Integer countArticles;
     Integer countFoils;
